@@ -3,7 +3,6 @@ import { Context } from '..';
 import { observer } from 'mobx-react-lite';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../img/sk-logo.png'
-import Header from './Header';
 
 const LoginForm: FC = function () {
     const [email, setEmail] = useState<string>('')
@@ -32,7 +31,7 @@ const LoginForm: FC = function () {
 
     return (
         <>
-            <Header store={store} />
+            {/* <Header store={store} /> */}
             <main>
                 <div className='login-wrapper'>
                     <img src={logo} alt="logo-sk" />

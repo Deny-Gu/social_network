@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser')
 const mysql = require('mysql2')
 const router = require('./router/index')
 const errormiddleware = require('./middlewares/error-middleware')
+const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 
 const PORT = process.env.PORT || 5000;
 const app = express()
@@ -18,33 +20,25 @@ const connection = mysql.createConnection({
   
 var corsOptions = {
     origin: "http://localhost:3000",
-    credentials:true,       
+    credentials:true, 
 };
 
 app.use(cookieParser())
+app.use(bodyParser.json())
 app.use(cors(corsOptions));
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
-app.use('/api', router);
-
-
-app.get("/api/test", (req, res) => {
-    connection.query("SELECT * FROM accounts", (err, result) => {
-      if (err) {
-        res.send(err)
-      }
-      res.send(result);
-    });
-});
-
-app.post('/api/reg', (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-
-    res.send({email, password});
-});
-
 app.use(errormiddleware);
+app.use('/uploads', express.static('uploads'));
+app.use(
+    fileUpload({
+        limits: {
+            fileSize: 10000000,
+        },
+        abortOnLimit: true,
+    })
+);
+app.use('/api', router);
 
 const start = async () => {
     try {

@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
+import React from 'react';
 
 function ProfileRecordsList({ store, users }) {
+
   return (
     <div className='profile_records_list'>
-      {!(store.records) ? <></> : store.records.map(mes => {
+      {!(store.records.length === undefined) ? store.records.map(mes => {
         for (let i = 0; i < users.length; i++) {
           if (mes.idFrom === users[i].id) {
             return (
@@ -20,7 +22,9 @@ function ProfileRecordsList({ store, users }) {
           }
         }
         return true;
-      })}
+      }) : <React.Fragment></React.Fragment>
+
+      }
     </div>
   )
 

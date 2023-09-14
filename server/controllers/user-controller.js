@@ -71,11 +71,36 @@ class UserController {
         }
     }
 
+    async editUser (req, res, next) {
+        try {
+            const {email, firstname, lastname, birthday, city, education, phone, aboutMe} = req.body;
+            const userData = await userService.editUser(email, firstname, lastname, birthday, city, education, phone, aboutMe);
+            console.log(userData)
+            return res.json(userData)
+        } catch (e) {
+            next(e)
+        }
+    }
+
     async getRecords (req, res, next) {
         try {
             const {idUser} = req.body;
             const records = await RecordsService.getAllRecords(idUser);
             return res.json(records)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async uploadImage (req, res, next) {
+        try {
+            const { email } = req.body;
+            const { image } = req.files;
+            await userService.editAvatar(email, image.name);
+            if (!image) return res.sendStatus(400);
+            if (/^image/.test(image.mimetype) === false) return res.sendStatus(400);
+            image.mv('./uploads/' + image.name);
+            return res.json(image.name)
         } catch (e) {
             next(e)
         }

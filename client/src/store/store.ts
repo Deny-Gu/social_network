@@ -6,13 +6,16 @@ import { API_URL } from "../http";
 import { AuthResponse } from "../models/response/AuthResponse";
 import { IRecords } from "../models/IRecords";
 import RecordsService from "../services/RecordsService";
+import UserService from "../services/UserService";
+import AvatarService from "../services/AvatarService";
 
 export default class Store {
     user = {} as IUser;
     records = {} as IRecords;
     isAuth = false;
     isLoading = false;
-    error = ''
+    error = '';
+    isEditUser = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -26,6 +29,10 @@ export default class Store {
         this.user = user;
     }
 
+    setEditUser(bool: boolean) {
+        this.isEditUser = bool;
+    }
+
     setRecords(records: any) {
         this.records = records;
     }
@@ -36,6 +43,10 @@ export default class Store {
 
     setError(error: string) {
         this.error = error;
+    }
+
+    setAvatarUrl(avatarUrl: string) {
+        this.user.avatar = 'http://localhost:5000/uploads/' + avatarUrl;
     }
 
     async login(email: string, password: string) {
@@ -80,6 +91,15 @@ export default class Store {
         }
     }
 
+    async editUser(email: string, firstname: string, lastname: string, birthday: string, city: string, education: string, phone: string, aboutMe: string) {
+        try {
+            const response = await UserService.editUser(email, firstname, lastname, birthday, city, education, phone, aboutMe);
+            this.setEditUser(true)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
     async checkAuth() {
         this.setLoading(true)
         try {
@@ -91,6 +111,15 @@ export default class Store {
             console.log(e.response?.data?.message)
         } finally {
             this.setLoading(false)
+        }
+    }
+
+    async uploadAvatar(file: object) {
+        try {
+            const response = await AvatarService.uploadAvatar(file);
+            console.log(response.data)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
         }
     }
 }

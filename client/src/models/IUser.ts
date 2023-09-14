@@ -9,4 +9,5 @@ export interface IUser {
     education: string;
     phone: string;
     aboutMe: string;
+    avatar: string;
 }

@@ -7,6 +7,8 @@ import LoginForm from './components/LoginForm';
 import Registration from './components/Registration';
 import Profile from './components/profile/Profile';
 import ProfileEdit from './components/profile/ProfileEdit';
+import Header from './components/Header';
+import SideBar from './components/SideBar';
 
 
 interface State {
@@ -26,11 +28,17 @@ let router = createBrowserRouter([
   },
   {
     path: "/:id",
-    element: <Profile />
+    element:  <div id="page_layout">
+                <SideBar />
+                <Profile />
+              </div>
   },
   {
-    path: "/:id/profile-edit",
-    element: <ProfileEdit />
+    path: "/profile-edit",
+    element: <div id="page_layout">
+                <SideBar />
+                <ProfileEdit />
+              </div>
   },
   {
     path: "/registration",
@@ -49,6 +57,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Context.Provider value={{ store }}>
+    <Header />
     <RouterProvider router={router} />
   </Context.Provider>
 );

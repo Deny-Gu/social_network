@@ -90,6 +90,18 @@ class UserService {
         const users = await UserModel.findAll();
         return users;
     }
+
+    async editUser(email, firstname, lastname,birthday, city, education, phone, aboutMe) {
+        const user = await UserModel.update({ firstname: firstname, lastname: lastname, birthday: birthday, city: city, education: education, phone: phone, aboutMe: aboutMe }, { where: { email: email } });
+        console.log(user)
+        return user;
+    }
+
+    async editAvatar(email, avatar) {
+        const user = await UserModel.update({ avatar: 'http://localhost:5000/uploads/' + avatar }, { where: { email: email } });
+        console.log(user)
+        return user;
+    }
 }
 
 module.exports = new UserService();

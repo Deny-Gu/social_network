@@ -4,8 +4,7 @@ import { HiOutlineUsers } from 'react-icons/hi';
 import { BiMessageDetail } from 'react-icons/bi';
 import { HiOutlinePhoto } from 'react-icons/hi2';
 
-function SideBar({ store }) {
-
+function SideBar() {
     return (
         <div id="sidebar">
             <div className="sidebar-wrapper">
@@ -15,7 +14,7 @@ function SideBar({ store }) {
                             <span className="sidebar_icon">
                                 <FaRegUserCircle />
                             </span>
-                            <Link to={`/${store.user.email.split('@')[0]}`}>Моя страница</Link>
+                            <Link to={`/`}>Моя страница</Link>
                         </li>
                         <li>
                             <span className="sidebar_icon">

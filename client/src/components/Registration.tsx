@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router';
 import { observer } from 'mobx-react-lite';
 import logo from '../img/sk-logo.png'
 import { Navigate, useLocation } from 'react-router-dom';
-import Header from './Header';
-
 
 function Registration () {
     const [email, setEmail] = useState<string>('')
@@ -33,8 +31,6 @@ function Registration () {
     }
 
     return (
-      <>
-        <Header store={store} />
         <main>
           <div className='registration-wrapper'>
             <img src={logo} alt="logo-sk"/>
@@ -51,7 +47,6 @@ function Registration () {
           </div>
           </div>
         </main>
-      </>
     )
 }
 

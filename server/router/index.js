@@ -14,6 +14,9 @@ router.post('/logout', UserController.logout)
 router.get('/activate/:link', UserController.activate)
 router.get('/refresh', UserController.refresh)
 router.get('/users', authMiddleware, UserController.getUsers)
+router.post('/user-edit', UserController.editUser)
 router.post('/records', UserController.getRecords)
+router.post('/upload', UserController.uploadImage)
+
 
 module.exports = router

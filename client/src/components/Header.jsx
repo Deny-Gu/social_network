@@ -1,8 +1,11 @@
-
+import React, { useContext } from 'react';
+import { Context } from "..";
+import { observer } from 'mobx-react-lite';
 import logo from '../img/sk-logo.png';
 import HeaderNavProfile from "./HeaderNavProfile";
 
-function Header({ store }) {
+function Header() {
+    const { store } = useContext(Context);
 
     return (
         <header>
@@ -11,10 +14,10 @@ function Header({ store }) {
                     <img src={logo} alt="logo-sk" />
                     <h1>Sidekick</h1>
                 </div>
-                {!(store.isAuth) ? <></> : <HeaderNavProfile store={store} />}
+                {!(store.isAuth) ? <></> : <HeaderNavProfile />}
             </div>
         </header>
     )
 }
 
-export default Header
+export default observer(Header)

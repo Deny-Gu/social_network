@@ -9,6 +9,7 @@ module.exports = class UserDto {
     education;
     phone;
     aboutMe;
+    avatar;
 
     constructor(model) {
         this.email = model.email;
@@ -21,5 +22,6 @@ module.exports = class UserDto {
         this.education = model.education;
         this.phone = model.phone;
         this.aboutMe = model.aboutMe;
+        this.avatar = model.avatar;
     }
 }

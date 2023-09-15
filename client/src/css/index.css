@@ -389,20 +389,56 @@ main {
     border-bottom: 1px solid #ededed;
     width: 100%;
     text-align: left;
+    position: relative;
 }
 
 .profile_records_add img {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    vertical-align: middle;
+    vertical-align: top;
 }
 
 #record-add-input {
-    padding: 10px;
+    width: 570px;
+    padding: 5px 10px 0;
     font-size: 15px;
     border: none;
     outline: none;
+    resize:none;
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.record-smile {
+    font-size: 24px;
+    color: #9f9191;
+    vertical-align: middle;
+    float: right;
+    margin: 3px 0;
+}
+
+.record-popup-smile {
+    position: absolute;
+    right: 0;
+}
+
+.record-add-btn {
+    cursor: pointer;
+    float: right;
+    right: 20px;
+    padding: 8px 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-weight: bold;
+    background-color: #5181b8;
+}
+
+.record-add-btn:hover {
+    background-color: #74a0d1;
 }
 
 .profile_records_nav {
@@ -561,7 +597,6 @@ main {
 }
 
 .avatar-refresh-popup {
-    height: 50%;
     width: 60%;
     background-color: #fff;
     border-radius: 12px;
@@ -595,6 +630,50 @@ main {
 
 .refresh-content {
     margin: 0 30px;
+}
+
+input[type="file"]{
+    display: none;
+  }
+
+.refresh-content-upload label {
+    cursor: pointer;
+    padding: 6px 15px;
+    border: none;
+    border-radius: 5px;
+    color: #6b8bd5;
+    font-weight: 600;
+    background-color: #ececfb;
+    font-size: 14px;
+    margin-right: 15px;
+}
+
+.refresh-content-upload label:hover {
+    background-color: #ddddf5;
+}
+
+.refresh-content-upload form {
+    margin: 20px;
+}
+
+.refresh-content-upload button {
+    cursor: pointer;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #6b8bd5;
+    font-weight: 600;
+    background-color: #ececfb;
+}
+
+.refresh-content-upload button:hover {
+    background-color: #ddddf5;
+}
+
+.preview-avatar {
+    width: 240px;
+    border-radius: 12px;
+    margin: 10px 0;
 }
 
 .refresh-footer {

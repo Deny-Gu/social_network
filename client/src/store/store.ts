@@ -16,6 +16,7 @@ export default class Store {
     isLoading = false;
     error = '';
     isEditUser = false;
+    API_URL_UPLOADS = 'http://localhost:5000/uploads/'
 
     constructor() {
         makeAutoObservable(this);
@@ -46,7 +47,7 @@ export default class Store {
     }
 
     setAvatarUrl(avatarUrl: string) {
-        this.user.avatar = 'http://localhost:5000/uploads/' + avatarUrl;
+        this.user.avatar = avatarUrl;
     }
 
     async login(email: string, password: string) {

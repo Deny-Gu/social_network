@@ -98,7 +98,7 @@ class UserService {
     }
 
     async editAvatar(email, avatar) {
-        const user = await UserModel.update({ avatar: 'http://localhost:5000/uploads/' + avatar }, { where: { email: email } });
+        const user = await UserModel.update({ avatar: avatar }, { where: { email: email } });
         console.log(user)
         return user;
     }

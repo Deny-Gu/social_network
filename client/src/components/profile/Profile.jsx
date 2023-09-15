@@ -3,8 +3,8 @@ import { Context } from "../..";
 import UserService from '../../services/UserService';
 import { observer } from 'mobx-react-lite';
 import { Navigate, useLocation } from 'react-router-dom';
-import ProfileRecordsList from './ProfileRecordsList';
 import ProfileHeader from './ProfileHeader';
+import ProfileRecords from './ProfileRecords';
 
 const Profile = function () {
   const { store } = useContext(Context);
@@ -37,17 +37,7 @@ const Profile = function () {
   return (
     <div id="page_body">
       <ProfileHeader store={store} />
-      <div className='profile_records'>
-        <div className='profile_records_add'>
-          <img src={store.user.avatar} alt='profile_records_img'></img>
-          <input id='record-add-input' placeholder='Что у вас нового?'></input>
-        </div>
-        <div className='profile_records_nav'>
-          <button>Все записи</button>
-          <button>Мои записи</button>
-        </div>
-        <ProfileRecordsList store={store} users={users} />
-      </div>
+      <ProfileRecords store={store} users={users} />
     </div>
   )
 };

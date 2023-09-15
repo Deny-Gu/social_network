@@ -14,7 +14,7 @@ const HeaderNavProfile = function () {
         return (
             <>
                 <div className="header-profile" onClick={() => !openPopup ? setOpenPopup(true) : setOpenPopup(false)}>
-                    <img src={store.user.avatar} alt="profile-img" />
+                    <img src={store.API_URL_UPLOADS + store.user.avatar} alt="profile-img" />
                     <span className="profile_icon">
                         <IoIosArrowDown />
                     </span>
@@ -23,7 +23,7 @@ const HeaderNavProfile = function () {
                     <div className="header-profile-popup">
                         <>
                             <div className="profile-popup-header">
-                                <img src={store.user.avatar} alt="profile-img" />
+                                <img src={store.API_URL_UPLOADS + store.user.avatar} alt="profile-img" />
                                 <div>
                                     <p>{store.user.firstname} {store.user.lastname}</p>
                                     <p>{store.user.email}</p>

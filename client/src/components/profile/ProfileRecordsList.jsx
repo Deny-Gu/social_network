@@ -22,7 +22,7 @@ function ProfileRecordsList({ store, users }) {
           }
         }
         return true;
-      }) : <React.Fragment></React.Fragment>
+      }) : <></>
 
       }
     </div>

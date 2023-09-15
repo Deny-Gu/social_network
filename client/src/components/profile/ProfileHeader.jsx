@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import profileImg from '../../img/profile.jpg'
 import { HiOutlineGift } from 'react-icons/hi2';
 import { HiOutlineHome } from 'react-icons/hi2'
 import { BsTelephone } from 'react-icons/bs'
@@ -9,8 +8,6 @@ import { BsLayoutTextSidebarReverse } from 'react-icons/bs'
 import { HiOutlinePhoto } from 'react-icons/hi2';
 import { VscEdit } from 'react-icons/vsc';
 import { AiOutlineClose } from 'react-icons/ai';
-import AvatarService from "../../services/AvatarService";
-import axios from "axios";
 
 function ProfileHeader({ store }) {
   const navigate = useNavigate();
@@ -32,7 +29,7 @@ function ProfileHeader({ store }) {
     return (
       <div className="avatar-popup-wrapper">
         <div className="avatar-popup">
-          <img src={store.avatarUrl} alt='profile_avatar'></img>
+          <img src={store.API_URL_UPLOADS + store.user.avatar} alt='profile_avatar'></img>
         </div>
         <div className="avatar-popup-close">
           <AiOutlineClose style={{color: "white", fontSize: "30px", cursor: "pointer"}} onClick={() => {setViewAvatar(false); setIsNavAvatar(false)}} />
@@ -45,7 +42,7 @@ function ProfileHeader({ store }) {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("image", e.target.image.files[0]);
+    formData.append("image", avatar);
     formData.append("email", store.user.email);
 
     fetch('http://localhost:5000/api/upload', {
@@ -55,6 +52,10 @@ function ProfileHeader({ store }) {
         .then((res) => res.json())
         .then(data => store.setAvatarUrl(data))
         .catch((err) => ("Error occured"));
+
+    setAvatar(null)
+    setRefreshAvatar(false);
+    setIsNavAvatar(false);
 }
 
   function RefreshAvatarPopup () {
@@ -70,11 +71,13 @@ function ProfileHeader({ store }) {
           <div className="refresh-content">
             <p>Друзьям будет проще узнать вас, если вы загрузите свою настоящую фотографию.
               Вы можете загрузить изображение в формате JPG, GIF или PNG.</p>
-              <div>
-              <form onSubmit={(e) => submitForm(e)} method="POST" encType="multipart/form-data">
-                  <input type="file" name="image" />
-                  <button type="submit">Upload</button>
-              </form>
+              <div className="refresh-content-upload">
+                {avatar ? <img className="preview-avatar" src={URL.createObjectURL(avatar)} alt="preview-avatar"/> : <></>}
+                <form onSubmit={(e) => submitForm(e)} method="POST" encType="multipart/form-data">
+                    <label htmlFor="image">Выбрать файл</label>
+                    <input onChange={(e) => {setAvatar(e.target.files[0])}} type="file" id="image" name="image" />
+                    {avatar ? <button type="submit">Сохранить</button> : <></>}
+                </form>
               </div>
           </div>
           <div className="refresh-footer">
@@ -88,7 +91,7 @@ function ProfileHeader({ store }) {
   return (
     <div className='profile_header'>
       <div className='profile_avatar' onMouseOver={() => { setIsNavAvatar(true) }} onMouseOut={() => { setIsNavAvatar(false) }}>
-        <img src={store.user.avatar} alt='profile_img'></img>
+        <img src={store.API_URL_UPLOADS + store.user.avatar} alt='profile_img'></img>
         {isNavAvatar ? <NavAvatar /> : <></>}
       </div>
       <div className='profile_info'>

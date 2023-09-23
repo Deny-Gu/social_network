@@ -17,6 +17,10 @@ router.get('/users', authMiddleware, UserController.getUsers)
 router.post('/user-edit', UserController.editUser)
 router.post('/records', UserController.getRecords)
 router.post('/upload', UserController.uploadImage)
+router.post('/removeAvatar', UserController.removeAvatar)
+router.post('/add-record', UserController.addRecords)
+router.post('/remove-record', UserController.removeRecord)
+router.post('/edit-record', UserController.editRecord)
 
 
 module.exports = router

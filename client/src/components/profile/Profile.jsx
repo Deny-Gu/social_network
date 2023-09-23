@@ -36,8 +36,8 @@ const Profile = function () {
 
   return (
     <div id="page_body">
-      <ProfileHeader store={store} />
-      <ProfileRecords store={store} users={users} />
+      <ProfileHeader />
+      <ProfileRecords users={users} />
     </div>
   )
 };

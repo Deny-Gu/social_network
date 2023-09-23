@@ -102,6 +102,12 @@ class UserService {
         console.log(user)
         return user;
     }
+
+    async removeAvatar(email) {
+        const user = await UserModel.update({ avatar: null }, { where: { email: email } });
+        console.log(user)
+        return user;
+    }
 }
 
 module.exports = new UserService();

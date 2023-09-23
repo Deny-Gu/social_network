@@ -13,17 +13,11 @@ const HeaderNavProfile = function () {
     function ProfilePopup() {
         return (
             <>
-                <div className="header-profile" onClick={() => !openPopup ? setOpenPopup(true) : setOpenPopup(false)}>
-                    <img src={store.API_URL_UPLOADS + store.user.avatar} alt="profile-img" />
-                    <span className="profile_icon">
-                        <IoIosArrowDown />
-                    </span>
-                </div>
                 {openPopup ? (
                     <div className="header-profile-popup">
                         <>
                             <div className="profile-popup-header">
-                                <img src={store.API_URL_UPLOADS + store.user.avatar} alt="profile-img" />
+                            {store.user.avatar ? <img src={store.API_URL_UPLOADS + store.user.avatar} alt="profile-img" /> : <span className='header-profile-no-avatar'></span>}
                                 <div>
                                     <p>{store.user.firstname} {store.user.lastname}</p>
                                     <p>{store.user.email}</p>
@@ -52,7 +46,17 @@ const HeaderNavProfile = function () {
                 </span>
                 <input type="text" id="search" name="search" placeholder="Поиск"></input>
             </div>
-            {store.user.avatar ? <ProfilePopup /> : <></>}
+            {store.isAuth ? 
+                <>
+                <div className="header-profile" onClick={() => !openPopup ? setOpenPopup(true) : setOpenPopup(false)}>
+                    {store.user.avatar ? <div background-image={'../img/profile.jpg'}><img src={store.API_URL_UPLOADS + store.user.avatar} alt="profile-img" /></div> : <span className='header-profile-no-avatar'></span>}
+                    <span className="profile_icon">
+                        <IoIosArrowDown />
+                    </span>
+                </div> 
+                <ProfilePopup />
+                </>
+            : <></>}
         </div>
     )
 };;

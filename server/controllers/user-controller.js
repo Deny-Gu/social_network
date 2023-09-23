@@ -105,6 +105,46 @@ class UserController {
             next(e)
         }
     }
+
+    async removeAvatar (req, res, next) {
+        try {
+            const { email } = req.body;
+            await userService.removeAvatar(email);
+            return res.json(email)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async addRecords (req, res, next) {
+        try {
+            const { idUser, idFrom, date, message } = req.body;
+            const userMessage = await RecordsService.addRecords(idUser, idFrom, date, message);
+            return res.json(userMessage)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async removeRecord (req, res, next) {
+        try {
+            const { id } = req.body;
+            const record = await RecordsService.removeRecord(id);
+            return res.json(record)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async editRecord (req, res, next) {
+        try {
+            const { id, message } = req.body;
+            const record = await RecordsService.editRecord(id, message);
+            return res.json(record)
+        } catch (e) {
+            next(e)
+        }
+    }
 }
 
 module.exports = new UserController();

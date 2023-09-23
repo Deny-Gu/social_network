@@ -118,7 +118,42 @@ export default class Store {
     async uploadAvatar(file: object) {
         try {
             const response = await AvatarService.uploadAvatar(file);
-            console.log(response.data)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
+    async removeAvatar(email: string) {
+        try {
+            const response = await AvatarService.removeAvatar(email);
+            this.setAvatarUrl('')
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
+    async addRecord(idUser: string, idFrom: string, date: string, message: string) {
+        try {
+            const response = await RecordsService.addRecord(idUser, idFrom, date, message);
+            this.getRecords(idUser)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
+    async removeRecord(id: number, idUser: string) {
+        try {
+            const response = await RecordsService.removeRecord(id);
+            this.getRecords(idUser)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
+    async editRecord(id: number, idUser: string, message: string) {
+        try {
+            const response = await RecordsService.editRecord(id, message);
+            this.getRecords(idUser)
         } catch (e: any) {
             this.setError(e.response?.data?.message)
         }

@@ -1,7 +1,9 @@
 const { validationResult } = require('express-validator');
 const userService = require('../service/user-service');
 const RecordsService = require('../service/records-service');
-const ApiError = require('../exceptions/api-error')
+const ApiError = require('../exceptions/api-error');
+const AlbumsService = require('../service/albums-service');
+const fs = require('fs');
 
 class UserController {
     async registration (req, res, next) {
@@ -12,6 +14,10 @@ class UserController {
             }
             const {email, password} = req.body
             const userData = await userService.registration(email, password)
+            fs.mkdir(`./uploads/${email.split('@')[0]}/`, {recursive: true}, err => {
+                if(err) throw err; // не удалось создать папку
+                console.log('Папка успешно создана');
+             });
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             return res.json(userData)
         } catch (e) {
@@ -75,7 +81,6 @@ class UserController {
         try {
             const {email, firstname, lastname, birthday, city, education, phone, aboutMe} = req.body;
             const userData = await userService.editUser(email, firstname, lastname, birthday, city, education, phone, aboutMe);
-            console.log(userData)
             return res.json(userData)
         } catch (e) {
             next(e)
@@ -99,7 +104,11 @@ class UserController {
             await userService.editAvatar(email, image.name);
             if (!image) return res.sendStatus(400);
             if (/^image/.test(image.mimetype) === false) return res.sendStatus(400);
-            image.mv('./uploads/' + image.name);
+            fs.mkdir(`./uploads/${email.split('@')[0]}/avatar/`, {recursive: true}, err => {
+                if(err) throw err; // не удалось создать папку
+                console.log('Папка успешно создана');
+             });
+            image.mv(`./uploads/${email.split('@')[0]}/avatar/` + image.name);
             return res.json(image.name)
         } catch (e) {
             next(e)
@@ -141,6 +150,87 @@ class UserController {
             const { id, message } = req.body;
             const record = await RecordsService.editRecord(id, message);
             return res.json(record)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getAlbums (req, res, next) {
+        try {
+            const {idUser} = req.body;
+            const albums = await AlbumsService.getAlbums(idUser);
+            return res.json(albums)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async addAlbum (req, res, next) {
+        try {
+            const { email, idUser, albumTitle } = req.body;
+            const album = await AlbumsService.addAlbum(idUser, albumTitle);
+            fs.mkdir(`./uploads/${email.split('@')[0]}/albums/`, {recursive: true}, err => {
+                if(err) throw err; // не удалось создать папку
+                console.log('Папка успешно создана');
+             });
+             fs.mkdir(`./uploads/${email.split('@')[0]}/albums/${albumTitle}`, {recursive: true}, err => {
+                if(err) throw err; // не удалось создать папку
+                console.log('Папка успешно создана');
+             });
+            return res.json(album)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async removeAlbum (req, res, next) {
+        try {
+            const { id, titleAlbum } = req.body;
+            const album = await AlbumsService.removeAlbum(id);
+            fs.unlink(`./uploads/${email.split('@')[0]}/albums/` + titleAlbum, err => {
+                if(err) throw err;
+                console.log('Файл успешно удалён');
+             });
+            return res.json(album)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getPhoto (req, res, next) {
+        try {
+            const {idUser} = req.body;
+            const albums = await AlbumsService.getPhoto(idUser);
+            return res.json(albums)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async addPhoto (req, res, next) {
+        try {
+            const { email, idUser, idAlbum, albumTitle } = req.body;
+            const { image } = req.files;
+
+            await AlbumsService.addPhoto(idUser, idAlbum, albumTitle, image.name)
+            if (!image) return res.sendStatus(400);
+            if (/^image/.test(image.mimetype) === false) return res.sendStatus(400);
+            image.mv(`./uploads/${email.split('@')[0]}/albums/${albumTitle}/` + image.name);
+            return res.json(image.name)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async removePhoto (req, res, next) {
+        try {
+            const { id, email, albumTitle, namePhoto } = req.body;
+            const image = await AlbumsService.removePhoto(id);
+            fs.unlink(`./uploads/${email.split('@')[0]}/albums/${albumTitle}/${namePhoto}`, err => {
+                if(err) throw err;
+                console.log('Файл успешно удалён');
+             });
+            return res.json(image)
         } catch (e) {
             next(e)
         }

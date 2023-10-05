@@ -8,14 +8,24 @@ import { IRecords } from "../models/IRecords";
 import RecordsService from "../services/RecordsService";
 import UserService from "../services/UserService";
 import AvatarService from "../services/AvatarService";
+import { IAlbums } from "../models/IAlbums";
+import AlbumsService from "../services/AlbumsService";
+import { IPhoto } from "../models/IPhoto";
 
 export default class Store {
     user = {} as IUser;
+    users = [];
     records = {} as IRecords;
+    albums = {} as IAlbums;
+    photo = {} as IPhoto;
+    editAlbum = [];
     isAuth = false;
     isLoading = false;
+    isLoadingUsers = false;
+    isLoadingRecords = false;
+    isLoadingAlbums = false;
+    isLoadingPhoto = false;
     error = '';
-    isEditUser = false;
     API_URL_UPLOADS = 'http://localhost:5000/uploads/'
 
     constructor() {
@@ -30,16 +40,44 @@ export default class Store {
         this.user = user;
     }
 
-    setEditUser(bool: boolean) {
-        this.isEditUser = bool;
+    setUsers(users: any) {
+        this.users = users;
     }
 
     setRecords(records: any) {
         this.records = records;
     }
 
+    setAlbums(albums: any) {
+        this.albums = albums;
+    }
+
+    setPhoto(photo: any) {
+        this.photo = photo;
+    }
+
+    setEditAlbum(album: any) {
+        this.editAlbum = album;
+    }
+
     setLoading(bool: boolean) {
         this.isLoading = bool;
+    }
+
+    setLoadingUsers(bool: boolean) {
+        this.isLoadingUsers = bool;
+    }
+
+    setLoadingRecords(bool: boolean) {
+        this.isLoadingRecords = bool;
+    }
+
+    setLoadingAlbums(bool: boolean) {
+        this.isLoadingAlbums = bool;
+    }
+
+    setLoadingPhoto(bool: boolean) {
+        this.isLoadingPhoto = bool;
     }
 
     setError(error: string) {
@@ -83,19 +121,22 @@ export default class Store {
         }
     }
 
-    async getRecords(idUser: string) {
+    async getUsers() {
+        this.setLoadingUsers(true)
         try {
-            const response = await RecordsService.fetchRecords(idUser);
-            this.setRecords(response.data)
-        } catch (e: any) {
-            this.setError(e.response?.data?.message)
+          const response = await UserService.fetchUsers()
+          this.setUsers(response.data)
+        } catch (e) {
+          console.log(e)
+        } finally {
+            this.setLoadingUsers(false)
         }
     }
 
     async editUser(email: string, firstname: string, lastname: string, birthday: string, city: string, education: string, phone: string, aboutMe: string) {
         try {
             const response = await UserService.editUser(email, firstname, lastname, birthday, city, education, phone, aboutMe);
-            this.setEditUser(true)
+            this.setUser(response.data.user)
         } catch (e: any) {
             this.setError(e.response?.data?.message)
         }
@@ -132,6 +173,18 @@ export default class Store {
         }
     }
 
+    async getRecords(idUser: string) {
+        this.setLoadingRecords(true)
+        try {
+            const response = await RecordsService.fetchRecords(idUser);
+            this.setRecords(response.data)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        } finally {
+            this.setLoadingRecords(false)
+        }
+    }
+
     async addRecord(idUser: string, idFrom: string, date: string, message: string) {
         try {
             const response = await RecordsService.addRecord(idUser, idFrom, date, message);
@@ -158,4 +211,76 @@ export default class Store {
             this.setError(e.response?.data?.message)
         }
     }
+
+    async getAlbums(idUser: string) {
+        this.setLoadingAlbums(true)
+        try {
+            const responseAlbum = await AlbumsService.getAlbums(idUser);
+            const responsePhoto = await AlbumsService.getPhoto(idUser);
+            let albums = responseAlbum.data;
+            let photo = responsePhoto.data;
+
+            for (let i = 0; i < albums.length; i++) {
+                albums[i].photo = []
+                for (let p = 0; p < photo.length; p++) {
+                    if (photo[p]) {
+                        if (albums[i].id === photo[p].idAlbum) {
+                            albums[i].photo.push(photo[p])
+                        }
+                    }
+                }
+                if (albums[i].photo[0]) {
+                    if (!albums[i].cover) {
+                        albums[i].cover = albums[i].photo[0].photo
+                    }
+                }
+            }
+
+            this.setAlbums(albums);
+        } catch (e: any) {
+            this.setError(e.responseAlbum?.data?.message)
+        } finally {
+            this.setLoadingAlbums(false)
+        }
+    }
+
+    async addAlbum(email: string, idUser: string, albumTitle: string) {
+        try {
+            const response = await AlbumsService.addAlbum(email, idUser, albumTitle);
+            this.getAlbums(idUser)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
+    async removeAlbum(id: number, titleAlbum: string, idUser: string) {
+        try {
+            const response = await AlbumsService.removeAlbum(id, titleAlbum);
+            this.getAlbums(idUser)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
+    async getPhoto(idUser: string) {
+        this.setLoadingPhoto(true)
+        try {
+            const response = await AlbumsService.getPhoto(idUser);
+            this.setPhoto(response.data)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        } finally {
+            this.setLoadingPhoto(false)
+        }
+    }
+
+    async removePhoto(id: number, email: string, albumTitle: string, namePhoto: string,  idUser: string) {
+        try {
+            const response = await AlbumsService.removePhoto(id, email, albumTitle, namePhoto);
+            this.getAlbums(idUser)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
 }

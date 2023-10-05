@@ -8,7 +8,10 @@ import Registration from './components/Registration';
 import Profile from './components/profile/Profile';
 import ProfileEdit from './components/profile/ProfileEdit';
 import Header from './components/Header';
-import SideBar from './components/SideBar';
+import Photo from './components/photo/Photo';
+import ProfileId from './components/profile/ProfileId';
+import PhotoAlbumEdit from './components/photo/PhotoAlbumEdit';
+import PhotoAlbumPage from './components/photo/PhotoAlbumPage';
 
 
 interface State {
@@ -25,20 +28,34 @@ let router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-  },
-  {
-    path: "/:id",
-    element:  <div id="page_layout">
-                <SideBar />
-                <Profile />
-              </div>
-  },
-  {
-    path: "/profile-edit",
-    element: <div id="page_layout">
-                <SideBar />
-                <ProfileEdit />
-              </div>
+    children: [
+      {
+        index: true,
+        element: <ProfileId />
+
+      },
+      {
+        path: "/:id",
+        element: <Profile />
+
+      },
+      {
+        path: "/profile-edit",
+        element: <ProfileEdit />
+      },
+      {
+        path: "/photo",
+        element: <Photo />
+      },
+      {
+        path: "/photo/album/:id",
+        element: <PhotoAlbumPage />
+      },
+      {
+        path: "/photo/edit-album/:id",
+        element: <PhotoAlbumEdit />
+      },
+    ]
   },
   {
     path: "/registration",
@@ -61,4 +78,3 @@ root.render(
     <RouterProvider router={router} />
   </Context.Provider>
 );
-

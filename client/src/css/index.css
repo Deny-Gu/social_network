@@ -11,11 +11,12 @@
 }
 
 @keyframes hideBlock {
-    100% {
-      opacity: 1;
-    }
     0% {
-      opacity: 0;
+        opacity: 1;
+    }
+    100% {
+        transition: opacity 100ms linear,transform 100ms linear,visibility 100ms linear,-webkit-transform 100ms linear;
+        opacity: 0;
     }
 }
 
@@ -23,6 +24,29 @@
     margin: 0;
     padding: 0;
 }
+
+.loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 48px;
+    height: 48px;
+    border: 5px solid #5181b8;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+} 
 
 body {
     background-color: #edeef0;
@@ -262,6 +286,7 @@ main {
     display: flex;
     justify-content: center;
     margin: auto;
+    position: relative;
 }
 
 #sidebar {
@@ -467,7 +492,7 @@ main {
 }
 
 #record-edit-input {
-    width: 512px;
+    width: 490px;
     padding: 5px 10px 0;
     font-size: 15px;
     border: none;
@@ -480,18 +505,39 @@ main {
 }
 
 .record-smile {
+    cursor: pointer;
     font-size: 24px;
     color: #9f9191;
     vertical-align: middle;
     float: right;
-    margin: 9px 0;
+    padding: 9px;
 }
 
 .record-popup-smile {
     position: absolute;
     font-size: 15px;
+    top: 40px;
     right: 0;
+}
+
+.record-style-smile {
+    position: absolute;
+    right: 0;
+    top: 90px;
+}
+
+.emoji-picker-on {
+    opacity: 1;
     z-index: 99;
+    visibility: visible;
+    transition: opacity 0.3s linear;
+}
+
+.emoji-picker-hidden {
+    opacity: 0;
+    z-index: -99;
+    visibility: hidden;
+    transition: visibility 0s 0.3s, opacity 0.3s linear, z-index 1s linear;
 }
 
 .record-add-btn {
@@ -534,7 +580,6 @@ main {
 
 .profile_records_nav button:hover {
     background-color: #ededed;
-    animation: showBlock 0.2s linear forwards;
 }
 
 .profile_records_list {
@@ -542,7 +587,7 @@ main {
     text-align: left;
 }
 
-.redcord-wrapper {
+.record-wrapper {
     display: flex;
     align-items: center;
     background-color: #edeef03b;
@@ -580,7 +625,8 @@ main {
 }
 
 .record-edit-btn {
-    margin-left: 10px;
+    padding: 0 10px;
+    z-index: 99;
 }
 
 .record-edit-save-btn {
@@ -699,7 +745,7 @@ main {
 }
 
 .avatar-popup-wrapper {
-    position: absolute;
+    position: fixed;
     background-color: #000000bd;
     width: 100%;
     height: 100vh;
@@ -726,7 +772,7 @@ main {
 }
 
 .avatar-refresh-popup-wrapper {
-    position: absolute;
+    position: fixed;
     background-color: #000000bd;
     width: 100%;
     height: 100vh;
@@ -779,7 +825,9 @@ input[type="file"]{
     display: none;
   }
 
-.refresh-content-upload label {
+.refresh-content-upload #image-albums {
+    display: flow;
+    width: 200px;
     cursor: pointer;
     padding: 6px 15px;
     border: none;
@@ -788,15 +836,53 @@ input[type="file"]{
     font-weight: 600;
     background-color: #447bba;
     font-size: 14px;
-    margin-right: 15px;
+    margin: 15px auto;
 }
 
-.refresh-content-upload label:hover {
+.refresh-content-upload #image-albums:hover {
     background-color: #598fcc;
+}
+
+.refresh-content-upload #choice-albums {
+    padding: 5px;
+    margin: 0 60px 0 0px;
+    font-size: 16px;
+    width: 30%;
+}
+
+#avatar-refresh-btn-file {
+    cursor: pointer;
+    padding: 6px 15px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 600;
+    background-color: #447bba;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+#avatar-refresh-btn-file:hover {
+    background-color: #648dbb;
+}
+
+.label-choice-albums {
+    width: 47%;
+    text-align: right;
+    margin-right: 10px;
+}
+
+#image-albums-cancel {
+    margin-left: 27%;
+    margin-right: 10px;
 }
 
 .refresh-content-upload form {
     margin: 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .refresh-content-upload button {
@@ -857,15 +943,484 @@ input[type="file"]{
     background-color: #598fcc;
 }
 
+.photo-my_albums {
+    background-color: #fff;
+    border-radius: 12px;
+    margin-top: 10px;
+    padding: 20px 0;
+    border: 1px solid #dddddd;
+    user-select: none;
+}
+
+.photo-my_photo {
+    display: flex;
+    justify-content: flex-start;
+    background-color: #fff;
+    border-radius: 12px;
+    margin-top: 10px;
+    padding: 20px 0;
+    border: 1px solid #dddddd;
+}
+
+.photo-my_albums-header {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    margin: auto;
+}
+
+.photo-my_albums-header-title h3 {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.photo-create-album-btn {
+    cursor: pointer;
+    margin-right: 10px;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #6b8bd5;
+    font-weight: 600;
+    background-color: #ececfb;
+}
+
+.photo-create-album-btn:hover {
+    background-color: #dfdffc;
+}
+
+.photo-add-photo-btn {
+    cursor: pointer;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 600;
+    background-color: #5181b8;
+}
+
+.photo-add-photo-btn:hover {
+    background-color: #6f9acc;
+}
+
+.line {
+    border-bottom: 1px solid #d3d3d3;
+    display: block;
+    margin: 10px;
+}
+
+.photo-my_albums-content {
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 15px;
+}
+
+.my_albums-item {
+    cursor: pointer;
+    position: relative;
+    width: 32.9%;
+    height: 200px;
+    background-image: url('../img/no-photo.jpg');
+    background-size: cover;
+}
+
+.my_albums-item img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.my_albums-item-title {
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    color: #fff;
+    width: 100%;
+    height: 40px;
+    background: linear-gradient(0deg, rgba(42,42,42,1) 0%, rgba(0,0,0,0) 100%);
+}
+
+.my_albums-item-title p {
+    display: inline-grid;
+    width: 42%;
+    padding: 10px;
+    font-weight: 600;
+}
+
+.modal-add-album {
+    position: fixed;
+    background-color: #000000bd;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+}
+
+.modal-add-album-wrapper {
+    width: 550px;
+    background-color: #fff;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    animation: showBlock 0.2s linear forwards;
+}
+
+.modal-add-album-wrapper-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #e1e1e1;
+    background-color: #fafbfc;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.modal-add-album-wrapper-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.modal-add-album-wrapper-content {
+    padding: 20px;
+}
+
+.modal-add-album-wrapper-content label {
+    display: block;
+    text-align: left;
+    font-weight: 600;
+}
+
+.modal-add-album-wrapper-content input {
+    padding: 5px 9px 7px;
+    border-radius: 5px;
+    width: 97%;
+    margin: 10px 0;
+    border: 1px solid #dbdbdb;
+}
+
+.modal-add-album-wrapper-footer {
+    display: flex;
+    justify-content: end;
+    padding: 10px;
+    border-bottom: 1px solid #e1e1e1;
+    background-color: #fafbfc;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.add-album-cancel {
+    cursor: pointer;
+    padding: 6px 15px;
+    border: none;
+    border-radius: 5px;
+    color: #6b8bd5;
+    font-weight: 600;
+    background-color: #ececfb;
+    font-size: 14px;
+    margin-right: 15px;
+}
+
+.add-album-cancel:hover {
+    background-color: #e4e4ff;
+}
+
+.add-album-succes {
+    cursor: pointer;
+    padding: 6px 15px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 600;
+    background-color: #447bba;
+    font-size: 14px;
+    margin-right: 15px;
+}
+
+.add-album-succes:hover {
+    background-color: #628cbd;
+}
+
+.photo-item {
+    height: 270px; 
+    cursor: pointer; 
+    position: relative;
+    flex-grow: 1;
+}
+
+.photo-item img {
+    object-fit: cover; 
+    width: 100%; 
+    height: 100%; 
+    vertical-align: middle; 
+    border-radius: 5px;
+}
+
+.modal-view-photo-wrapper {
+    position: fixed;
+    background-color: #000000bd;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 99;
+}
+
+.modal-view-photo {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-view-photo img {
+    height: 90%;
+}
+
+.modal-view-photo-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.prev-img {
+    position: fixed;
+    top: 50%;
+    left: 20px;
+    color: #fff;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.next-img {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    color: #fff;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.my_albums-item-edit {
+    width: 30px;
+    height: 30px;
+    background: #00000099;
+    color: #dbdbdb;;
+    font-size: 24px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.my_albums-item-edit svg {
+    margin-top: 3px;
+}
+
+.my_albums-item-edit svg:hover {
+    color: #fff;
+}
+
+.my_albums-item-edit-icon {
+    position: absolute;
+    width: 200px;
+    padding: 5px 0;
+    top: -30px;
+    right: -150px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #000000b6;
+    border-radius: 5px;
+    z-index: 99;
+}
+
+.photo-my_albums-header-block {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.photo-my_albums-header-block-pagination {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+.photo-my_albums-header-block-pagination a {
+    color: #626d7a;
+    text-decoration: none;
+}
+
+.photo-my_albums-header-block-pagination a:hover {
+    text-decoration: underline;
+}
+
+.crumb_sep {
+    display: inline;
+    padding-left: 6px;
+    font-size: 9px;
+    margin: 23px 10px 21px 12px;
+    position: relative;
+    top: -2px;
+    background: url('../img/breadcrumbs.png') -6px 0 no-repeat;
+}
+
+#remove_album-btn {
+    position: absolute;
+    right: 20px;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #6b8bd5;
+    font-weight: bold;
+    background-color: #ececfb;
+    cursor: pointer;
+}
+
+#remove_album-btn:hover {
+    background-color: #ddddf5;
+}
+
+.photo-my_albums-content-edit {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 25px 0;
+}
+
+.photo-my_albums-content-edit h4 {
+    text-align: left;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.photo-my_albums-content-edit-cover-img {
+    position: relative;
+    width: 250px;
+    height: 190px;
+    background-image: url(http://localhost:3000/static/media/no-photo.5e2efe4….jpg);
+    background-size: cover;
+}
+
+.photo-my_albums-content-edit-cover-img img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.edit-cover-img-btn {
+    display: none;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #0000008c;
+    padding: 5px 0;
+}
+
+#edit-cover {
+    cursor: pointer;
+    color: #cbcbcb;
+}
+
+#edit-cover:hover {
+    color: #fff;
+}
+
+#edit-cover svg {
+    font-size: 20px;
+    vertical-align: bottom;
+    margin-right: 5px;
+}
+
+.photo-my_albums-content-edit-name {
+    margin-left: 40px;
+}
+
+.photo-my_albums-content-edit-name input {
+    width: 300px;
+    padding: 2px 0 1px 6px;
+    height: 30px;
+    margin-bottom: 6px;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    outline: none;
+}
+
+.photo-my_albums-content-edit-name button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    background-color: #447bba;
+    cursor: pointer;
+    display: block;
+    margin-top: 10px;
+}
+
+.photo-my_albums-content-edit-name button:hover {
+    background-color: #8aa8ca;
+}
+
+.photo-my_albums-content-photo-header {
+    margin-bottom: 10px;
+    margin-left: 10px;
+    text-align: left;
+}
+
+.photo-my_albums-content-photo-all {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.content-photo-all-item {
+    width: 24%;
+    height: 150px;
+    position: relative;
+}
+
+.content-photo-all-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.content-photo-all-item-remove {
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 22px;
+    color: #c5c5c5;
+    background-color: #000000ad;
+    border-radius: 3px;
+}
+
+.content-photo-all-item-remove svg {
+    margin-top: 1px;
+}
+
+.content-photo-all-item-remove:hover svg {
+    color: #fff;
+}
+
 .profile_records_add .EmojiPickerReact {
     --epr-emoji-size: 25px;
     --epr-emoji-padding: 2px;
-    --epr-category-label-height: 20px;
+    --epr-category-labrgbht: 20px;
     --epr-header-padding: 10px var(--epr-horizontal-padding);
     --epr-horizontal-padding: 5px;
 }
 
-.record-message .EmojiPickerReact {
+.record-popup-smile-single .EmojiPickerReact {
     --epr-emoji-size: 25px;
     --epr-emoji-padding: 2px;
     --epr-category-label-height: 20px;

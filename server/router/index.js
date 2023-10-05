@@ -21,6 +21,12 @@ router.post('/removeAvatar', UserController.removeAvatar)
 router.post('/add-record', UserController.addRecords)
 router.post('/remove-record', UserController.removeRecord)
 router.post('/edit-record', UserController.editRecord)
+router.post('/get-albums', UserController.getAlbums)
+router.post('/add-album', UserController.addAlbum)
+router.post('/remove-album', UserController.removeAlbum)
+router.post('/get-photo', UserController.getPhoto)
+router.post('/add-photo', UserController.addPhoto)
+router.post('/remove-photo', UserController.removePhoto)
 
 
 module.exports = router

@@ -19,7 +19,7 @@ const LoginForm: FC = function () {
 
     if (store.isLoading) {
         return (
-            <div>Загрузка...</div>
+            <div className='loader'></div>
         )
     }
 

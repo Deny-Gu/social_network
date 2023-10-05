@@ -20,7 +20,7 @@ function Registration () {
 
     if (store.isLoading) {
         return (
-          <div>Загрузка...</div>
+          <div className='loader'></div>
         )
     }
 

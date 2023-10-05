@@ -2,11 +2,11 @@ import React, { useContext, useEffect } from 'react';
 import { Context } from './index';
 import { observer } from 'mobx-react-lite';
 import './css/index.css'
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
+import SideBar from './components/SideBar';
 
-const App = function () {
+const App = (props) => {
   const { store } = useContext(Context)
-  const location = useLocation();
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -16,19 +16,25 @@ const App = function () {
 
   if (store.isLoading) {
     return (
-      <div>Загрузка...</div>
+      <div className='loader'></div>
     )
   }
 
   if (!store.isAuth) {
     return (
-      <Navigate to="/login" state={{ from: location }} replace />
+      <Navigate to="/login" />
     )
   }
 
   return (
-    <Navigate to={`/${store.user.email.split('@')[0]}`} state={{ from: location }} replace />
-  );
+          <div id="page_layout">
+            <SideBar />
+            <div id="page_body">
+             <Outlet />
+            </div>
+          </div>
+          )
+
 };;
 
 export default observer(App);

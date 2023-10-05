@@ -32,7 +32,7 @@ function SideBar() {
                             <span className="sidebar_icon">
                                 <HiOutlinePhoto />
                             </span>
-                            <Link to="/">Фотографии</Link>
+                            <Link to="/photo">Фотографии</Link>
                         </li>
                     </ul>
                 </nav>

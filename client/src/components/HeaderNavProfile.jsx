@@ -14,10 +14,10 @@ const HeaderNavProfile = function () {
         return (
             <>
                 {openPopup ? (
-                    <div className="header-profile-popup">
+                    <div className="header-profile-popup" onMouseLeave={() => setOpenPopup(false)}>
                         <>
                             <div className="profile-popup-header">
-                            {store.user.avatar ? <img src={store.API_URL_UPLOADS + store.user.avatar} alt="profile-img" /> : <span className='header-profile-no-avatar'></span>}
+                            {store.user.avatar ? <img src={store.API_URL_UPLOADS + store.user.email.split('@')[0] + "/avatar/" + store.user.avatar} alt="profile-img" /> : <span className='header-profile-no-avatar'></span>}
                                 <div>
                                     <p>{store.user.firstname} {store.user.lastname}</p>
                                     <p>{store.user.email}</p>
@@ -49,7 +49,7 @@ const HeaderNavProfile = function () {
             {store.isAuth ? 
                 <>
                 <div className="header-profile" onClick={() => !openPopup ? setOpenPopup(true) : setOpenPopup(false)}>
-                    {store.user.avatar ? <div background-image={'../img/profile.jpg'}><img src={store.API_URL_UPLOADS + store.user.avatar} alt="profile-img" /></div> : <span className='header-profile-no-avatar'></span>}
+                    {store.user.avatar ? <div background-image={'../img/profile.jpg'}><img src={store.API_URL_UPLOADS + store.user.email.split('@')[0] + "/avatar/" + store.user.avatar} alt="profile-img" /></div> : <span className='header-profile-no-avatar'></span>}
                     <span className="profile_icon">
                         <IoIosArrowDown />
                     </span>

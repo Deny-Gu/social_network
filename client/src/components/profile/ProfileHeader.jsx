@@ -35,7 +35,7 @@ function ProfileHeader() {
     return (
       <div className="avatar-popup-wrapper">
         <div className="avatar-popup">
-          <img src={store.API_URL_UPLOADS + store.user.avatar} alt='profile_avatar'></img>
+          <img src={store.API_URL_UPLOADS + store.user.email.split('@')[0] + "/avatar/" + store.user.avatar} alt='profile_avatar'></img>
         </div>
         <div className="avatar-popup-close">
           <AiOutlineClose style={{ color: "white", fontSize: "30px", cursor: "pointer" }} onClick={() => { setViewAvatar(false); setIsNavAvatar(false) }} />
@@ -71,7 +71,7 @@ function ProfileHeader() {
           <div className="refresh-header">
             <h3>Загрузка новой фотографии</h3>
             <div className="avatar-refresh-popup-close">
-              <AiOutlineClose style={{ color: "#6f7985", fontSize: "20px", cursor: "pointer" }} onClick={() => {setRefreshAvatar(false)}} />
+              <AiOutlineClose style={{ color: "#6f7985", fontSize: "20px", cursor: "pointer" }} onClick={() => {setRefreshAvatar(false); setAvatar(null)}} />
             </div>
           </div>
           <div className="refresh-content">
@@ -80,7 +80,7 @@ function ProfileHeader() {
             <div className="refresh-content-upload">
               {avatar ? <img className="preview-avatar" src={URL.createObjectURL(avatar)} alt="preview-avatar" /> : <></>}
               <form onSubmit={(e) => submitForm(e)} method="POST" encType="multipart/form-data">
-                <label htmlFor="image">Выбрать файл</label>
+                <label id="avatar-refresh-btn-file" htmlFor="image">Выбрать файл</label>
                 <input onChange={(e) => { setAvatar(e.target.files[0]) }} type="file" id="image" name="image" />
                 {avatar ? <button type="submit">Сохранить</button> : <></>}
               </form>
@@ -119,7 +119,7 @@ function ProfileHeader() {
   return (
     <div className='profile_header'>
       <div className='profile_avatar' onMouseOver={() => { setIsNavAvatar(true) }} onMouseOut={() => { setIsNavAvatar(false) }}>
-        {store.user.avatar ? <img src={store.API_URL_UPLOADS + store.user.avatar} alt='profile_img'></img> : null}
+        {store.user.avatar ? <img src={store.API_URL_UPLOADS + store.user.email.split('@')[0] + "/avatar/" + store.user.avatar} alt='profile_img'></img> : null}
         {isNavAvatar ? <NavAvatar /> : <></>}
       </div>
       <div className='profile_info'>

@@ -1,25 +1,25 @@
 import { Link } from "react-router-dom";
-import { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { Context } from "../..";
 import { observer } from 'mobx-react-lite';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 import { HiOutlineFaceSmile } from 'react-icons/hi2';
 import EmojiPicker from 'emoji-picker-react';
 
-function ProfileRecordsList({ users }) {
+function ProfileRecordsList() {
   const { store } = useContext(Context);
   const [viewNavRecord, setViewNavRecord] = useState(null);
   const [editRecord, setEditRecord] = useState(null);
-
-  const [viewSmiles, setViewSmiles] = useState(false);
+  const [select, setSelect] = useState(null);
   const [msg, setMsg] = useState('');
   const inputRef = useRef(null);
 
   function onEmojiClick (emojiObject, event) {
     const { selectionStart, selectionEnd } = inputRef.current
+    const newSel = msg.slice(0, selectionStart) + emojiObject.emoji
     const newMsg = msg.slice(0, selectionStart) + emojiObject.emoji + msg.slice(selectionEnd)
     setMsg(newMsg)
-    setViewSmiles(false)
+    setSelect(newSel.length)
   };
 
   function auto_grow(element) {
@@ -32,7 +32,7 @@ function ProfileRecordsList({ users }) {
       <>
         {viewNavRecord === index ? 
           <div className='nav-record-wrapper'>
-            <button onClick={() => {setEditRecord(index); setMsg(message)} }>Редактировать запись</button>
+            <button onClick={(e) => {setEditRecord(index); setMsg(message); setSelect(message.length)} }>Редактировать запись</button>
             <button onClick={() => {store.removeRecord(idRecord, store.user.id); setViewNavRecord(null)} }>Удалить запись</button>
           </div>
           :
@@ -41,48 +41,54 @@ function ProfileRecordsList({ users }) {
     )
   };
 
+  function getCoords(e, selector) {
+    const block = document.querySelector(selector);
+
+    if (e.target) {
+      let box = e.target.getBoundingClientRect();
+      block.style.top = box.bottom + window.scrollY - 400 + 'px';
+    }
+  }
+
+  function showEmojiPicker (selector, classOn, classHidden) {
+    const block = document.querySelector(selector);
+
+    if (block) {
+      block.classList.add(classOn);
+      block.classList.remove(classHidden);
+    }
+  }
+
+  function hiddenEmojiPicker (selector, classHidden, classOn) {
+    const block = document.querySelector(selector);
+    block.classList.add(classHidden);
+    block.classList.remove(classOn);
+  }
+
   return (
     <div className='profile_records_list'>
       {!(store.records.length === undefined) ? store.records.toReversed().map((record, index) => {
-        for (let i = 0; i < users.length; i++) {
-          if (record.idFrom === users[i].id) {
+        for (let i = 0; i < store.users.length; i++) {
+          if (record.idFrom === store.users[i].id) {
             return (
-              <div className="redcord-wrapper" key={Math.random()}>
+              <div className="record-wrapper" key={Math.random()}>
                 <div className="record-head">
-                  {users[i].avatar ? <img src={store.API_URL_UPLOADS + users[i].avatar} alt='profile_img'></img> : null}
-                  <h3><Link to={`/${users[i].email}`} >{users[i].firstname} {users[i].lastname}</Link></h3>
+                  {store.users[i].avatar ? <img src={store.API_URL_UPLOADS + store.user.email.split('@')[0] + "/avatar/" + store.users[i].avatar} alt='profile_img'></img> : null}
+                  <h3><Link to={`/${store.users[i].email}`} >{store.users[i].firstname} {store.users[i].lastname}</Link></h3>
                   <p>{record.date}</p>
                 </div>
                 <div className="record-message">
                   {editRecord === index ? 
                     <>
-                      <textarea id="record-edit-input" onFocus={(e) => {e.target.setSelectionRange(-1, -1);}} onKeyDown={(e) => e.key === 'Enter' ? (store.editRecord(record.id, store.user.id, e.target.value), setEditRecord(null)) : null}  onInput={(e) => auto_grow(e.target)} ref={inputRef} value={msg} onChange={(e) => setMsg(e.target.value)} defaultValue={record.message} autoFocus />
-                      <span className='record-smile'><HiOutlineFaceSmile onClick={() => setViewSmiles(!viewSmiles)} /></span>
-                      <div className='record-popup-smile'>{viewSmiles ? <EmojiPicker 
-                                                              height={250} width={350}
-                                                              categories={['suggested',
-                                                                            'custom', 
-                                                                            'smileys_people',
-                                                                            'animals_nature',
-                                                                            'food_drink',
-                                                                            'travel_places',
-                                                                            'activities',]}
-                                                              previewConfig={
-                                                                {showPreview: false} // defaults to: true
-                                                              }
-                                                              skinTonesDisabled={true} 
-                                                              searchDisabled={true} 
-                                                              emojiStyle="google" 
-                                                              onEmojiClick={onEmojiClick} 
-                                                            /> : <></>}
-                      </div>
+                      <textarea id="record-edit-input" onFocus={(e) => e.target.selectionStart = select} onKeyDown={(e) => e.key === 'Enter' ? (store.editRecord(record.id, store.user.id, e.target.value), setEditRecord(null)) : null}  onInput={(e) => auto_grow(e.target)} ref={inputRef} value={msg} onClick={(e) => setSelect(e.target.selectionStart)} onChange={(e) => {setMsg(e.target.value); setSelect(e.target.selectionStart)}} autoFocus />
+                      <span className='record-smile' onMouseEnter={(e) => {getCoords(e, `.profile_records_list .record-popup-smile-single`); showEmojiPicker(`.profile_records_list .record-popup-smile-single`, 'emoji-picker-on', 'emoji-picker-hidden')}}  onMouseLeave={() => hiddenEmojiPicker(`.profile_records_list .record-popup-smile-single`, 'emoji-picker-hidden', 'emoji-picker-on')}><HiOutlineFaceSmile /></span>
                       <button className="record-edit-save-btn" onClick={(e) => {store.editRecord(record.id, store.user.id, msg); setEditRecord(null)}}>Сохранить</button>
                     </>
                     : 
                     record.message
                   }
                 </div>
-                <div className="record-edit-btn"  onMouseOver={() => {setViewNavRecord(index)}} onMouseLeave={() => setViewNavRecord(null)}>
+                <div className="record-edit-btn" onMouseOver={(e) => {setViewNavRecord(index)}} onMouseLeave={() => setViewNavRecord(null)}>
                   <IoEllipsisHorizontalSharp style={{ color: "grey", fontSize: "24px", cursor: "pointer" }}/>
                   <NavRecord index={index} idRecord={record.id} message={record.message} />
                 </div>
@@ -90,10 +96,13 @@ function ProfileRecordsList({ users }) {
             )
           }
         }
-        return true;
       }) : <></>
 
       }
+       <div className={`record-popup-smile-single record-style-smile emoji-picker-hidden`} onMouseEnter={() => {showEmojiPicker(`.profile_records_list .record-popup-smile-single`, 'emoji-picker-on', 'emoji-picker-hidden')}} onMouseLeave={() => hiddenEmojiPicker(`.profile_records_list .record-popup-smile-single`, 'emoji-picker-hidden', 'emoji-picker-on')}>
+      <EmojiPicker height={300} width={300} categories={['suggested','smileys_people','animals_nature','food_drink','travel_places','activities',]}
+          previewConfig={{showPreview: false}} skinTonesDisabled={true} searchDisabled={true} emojiStyle="google" onEmojiClick={onEmojiClick} />
+      </div>
     </div>
   )
 

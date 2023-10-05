@@ -92,20 +92,19 @@ class UserService {
     }
 
     async editUser(email, firstname, lastname,birthday, city, education, phone, aboutMe) {
-        const user = await UserModel.update({ firstname: firstname, lastname: lastname, birthday: birthday, city: city, education: education, phone: phone, aboutMe: aboutMe }, { where: { email: email } });
-        console.log(user)
-        return user;
+        const userEdit = await UserModel.update({ firstname: firstname, lastname: lastname, birthday: birthday, city: city, education: education, phone: phone, aboutMe: aboutMe }, { where: { email: email } });
+        const user = await UserModel.findOne({ where: { email: email } });
+        const userDto = new UserDto(user)
+        return {user: userDto};
     }
 
     async editAvatar(email, avatar) {
         const user = await UserModel.update({ avatar: avatar }, { where: { email: email } });
-        console.log(user)
         return user;
     }
 
     async removeAvatar(email) {
         const user = await UserModel.update({ avatar: null }, { where: { email: email } });
-        console.log(user)
         return user;
     }
 }

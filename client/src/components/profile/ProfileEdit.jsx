@@ -14,12 +14,6 @@ const ProdileEdit = function () {
     const [aboutMe, setAboutMe] = useState(store.user.aboutMe)
     const [editSucces, setEditSucces] = useState(false)
 
-    useEffect(() => {
-        if (localStorage.getItem('token')) {
-            store.checkAuth()
-        }
-    }, [store])
-
     return (
         <div id="page_body">
             <div className='profile_edit_wrapper'>

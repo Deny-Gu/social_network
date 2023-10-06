@@ -235,6 +235,16 @@ class UserController {
             next(e)
         }
     }
+
+    async editCover (req, res, next) {
+        try {
+            const { id, cover } = req.body;
+            const albumCover = await AlbumsService.editCover(id, cover);
+            return res.json(albumCover)
+        } catch (e) {
+            next(e)
+        }
+    }
 }
 
 module.exports = new UserController();

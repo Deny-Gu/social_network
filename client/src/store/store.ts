@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { IUser } from "../models/IUser";
 import AuthService from "../services/AuthService";
 import axios from "axios";
@@ -11,6 +11,11 @@ import AvatarService from "../services/AvatarService";
 import { IAlbums } from "../models/IAlbums";
 import AlbumsService from "../services/AlbumsService";
 import { IPhoto } from "../models/IPhoto";
+import { configure } from "mobx"
+
+configure({
+    enforceActions: "never",
+})
 
 export default class Store {
     user = {} as IUser;
@@ -283,4 +288,12 @@ export default class Store {
         }
     }
 
+    async editCover(id: number, idUser: string, cover: string) {
+        try {
+            const response = await AlbumsService.editCover(id, cover);
+            this.getAlbums(idUser)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
 }

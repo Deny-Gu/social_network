@@ -845,7 +845,7 @@ input[type="file"]{
 
 .refresh-content-upload #choice-albums {
     padding: 5px;
-    margin: 0 60px 0 0px;
+    margin: 0 20% 0 0px;
     font-size: 16px;
     width: 30%;
 }
@@ -867,14 +867,13 @@ input[type="file"]{
 }
 
 .label-choice-albums {
-    width: 47%;
+    width: 40%;
     text-align: right;
     margin-right: 10px;
 }
 
 #image-albums-cancel {
-    margin-left: 27%;
-    margin-right: 10px;
+    margin: 10px 10px 0 25%;
 }
 
 .refresh-content-upload form {
@@ -897,6 +896,16 @@ input[type="file"]{
 
 .refresh-content-upload button:hover {
     background-color: #ddddf5;
+}
+
+#image-albums-submit {
+    color: #fff;
+    background-color: #5181b8;
+    margin: 10px 25% 0 0;
+}
+
+#image-albums-submit:hover {
+    background-color: #82a8d3;;
 }
 
 .preview-avatar {
@@ -1017,10 +1026,14 @@ input[type="file"]{
     padding: 15px;
 }
 
+.my_albums-item-wrapper {
+    position: relative;
+    width: 32.5%;
+}
+
 .my_albums-item {
     cursor: pointer;
     position: relative;
-    width: 32.9%;
     height: 200px;
     background-image: url('../img/no-photo.jpg');
     background-size: cover;
@@ -1216,6 +1229,7 @@ input[type="file"]{
     position: absolute;
     top: 10px;
     right: 10px;
+    cursor: pointer;
 }
 
 .my_albums-item-edit svg {
@@ -1302,7 +1316,7 @@ input[type="file"]{
     position: relative;
     width: 250px;
     height: 190px;
-    background-image: url(http://localhost:3000/static/media/no-photo.5e2efe4….jpg);
+    background-image: url('../img/no-photo.jpg');
     background-size: cover;
 }
 
@@ -1410,6 +1424,67 @@ input[type="file"]{
 
 .content-photo-all-item-remove:hover svg {
     color: #fff;
+}
+
+#modal-delete-photo-btn-cancel {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #6b8bd5;
+    font-weight: bold;
+    background-color: #ececfb;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+#modal-delete-photo-btn-cancel:hover {
+    background-color: #d5d5f8;
+}
+
+#modal-delete-photo-btn-succes {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    background-color: #447bba;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#modal-delete-photo-btn-succes:hover {
+    background-color: #6e96c5;
+}
+
+.preview-delete-photo {
+    display: block;
+    margin: 10px auto;
+    width: 300px;
+}
+
+.modal-edit-cover-content {
+    width: 100%;
+    margin: 20px auto;
+}
+
+.modal-edit-cover-content-photo-all {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.modal-edit-cover-content-item {
+    height: 150px;
+    position: relative;
+    cursor: pointer;
+}
+
+.modal-edit-cover-content-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .profile_records_add .EmojiPickerReact {

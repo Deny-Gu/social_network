@@ -113,6 +113,12 @@ function PhotoAlbums () {
         store.getAlbums(store.user.id)
       };
 
+    if (Object.keys(store.albums).length === 0) {
+      return (
+        <div className='loader'></div>
+      )
+    }
+
     return (
     <div className="photo-my_albums">
         <div className="photo-my_albums-header">
@@ -130,23 +136,25 @@ function PhotoAlbums () {
             <>
               {store.albums.length === 0 ? <div className="my_albums-no-item"><p>У вас нет альбомов</p></div> : 
               store.albums.map(album => { 
-                return (<div className="my_albums-item" onClick={() => navigate(`/photo/album/${album.id}`)} onMouseOver={() => setViewEditIcon(album.id)} onMouseLeave={() => setViewEditIcon(null)} key={album.id}>
-                        {album.cover !== undefined ? <img src={`${store.API_URL_UPLOADS + store.user.email.split('@')[0]}/albums/${album.albumTitle}/${album.cover}`} alt={album.albumTitle} /> : null}
-                        <div className="my_albums-item-title">
-                            <p style={{textAlign: "left"}}>{album.albumTitle}</p>
-                            <p style={{textAlign: "right"}}>{album.photo.length}</p>
-                        </div>
-                        {viewEditIcon === album.id ? 
-                            <div className="my_albums-item-edit" onClick={() => {store.setEditAlbum(album); navigate(`/photo/edit-album/${album.id}`)} }>
+                return (<div className="my_albums-item-wrapper" key={album.id}>
+                          <div className="my_albums-item" onClick={() => navigate(`/photo/album/${album.id}`)} onMouseOver={() => setViewEditIcon(album.id)} onMouseLeave={() => setViewEditIcon(null)}>
+                            {album.cover !== undefined ? <img src={`${store.API_URL_UPLOADS + store.user.email.split('@')[0]}/albums/${album.albumTitle}/${album.cover}`} alt={album.albumTitle} /> : null}
+                            <div className="my_albums-item-title">
+                                <p style={{textAlign: "left"}}>{album.albumTitle}</p>
+                                <p style={{textAlign: "right"}}>{album.photo.length}</p>
+                            </div>
+                          </div>
+                          {viewEditIcon === album.id ? 
+                            <div className="my_albums-item-edit" onClick={() => {store.setEditAlbum(album); navigate(`/photo/edit-album/${album.id}`)}} onMouseOver={() => {setViewEditIcon(album.id); setViewEditIconText(album.id)}} onMouseLeave={() => setViewEditIconText(null)} >
                               {viewEditIconText === album.id ? 
                                   <div className="my_albums-item-edit-icon">
                                     Редактирование альбома
                                   </div> :
                                   null}
-                              <AiOutlineEdit onMouseOut={() => setViewEditIconText(album.id)} onMouseLeave={() => setViewEditIconText(null)}/>
+                              <AiOutlineEdit />
                             </div> :
                             null}
-                        </div>)
+                          </div>)
               })}
             </>
           : null}

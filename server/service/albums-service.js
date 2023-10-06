@@ -18,11 +18,6 @@ class AlbumsService {
       const albums = await AlbumsModel.create({ idUser, albumTitle });
       return albums;
     }
-
-    // async editRecord(id, message) {
-    //   const records = await RecordsModel.update({ message: message },{ where: { id: id }});
-    //   return records;
-    // }
     
     async removeAlbum(id) {
       const albums = await AlbumsModel.destroy({ where: { id: id } });
@@ -39,14 +34,19 @@ class AlbumsService {
       return photoImage;
     }
 
-    // async editRecord(id, message) {
-    //   const records = await RecordsModel.update({ message: message },{ where: { id: id }});
-    //   return records;
-    // }
-    
     async removePhoto(id) {
       const photoImage  = await PhotoModel.destroy({ where: { id: id } });
       return photoImage ;
+    }
+
+    async editCover(id, cover) {
+      const albumCover = await AlbumsModel.update({ cover: cover },{ where: { id: id }});
+      return albumCover;
+    }
+
+    async editAlbumTitle(id, albumTitle) {
+      const album = await AlbumsModel.update({ albumTitle: albumTitle },{ where: { id: id }});
+      return album;
     }
 }
 

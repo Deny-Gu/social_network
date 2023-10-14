@@ -113,12 +113,6 @@ function PhotoAlbums () {
         store.getAlbums(store.user.id)
       };
 
-    if (Object.keys(store.albums).length === 0) {
-      return (
-        <div className='loader'></div>
-      )
-    }
-
     return (
     <div className="photo-my_albums">
         <div className="photo-my_albums-header">
@@ -132,13 +126,13 @@ function PhotoAlbums () {
         </div>
         <span className="line"></span>
         <div className="photo-my_albums-content">
-          {store.albums ?
+          {store.albums.length !== undefined ?
             <>
               {store.albums.length === 0 ? <div className="my_albums-no-item"><p>У вас нет альбомов</p></div> : 
               store.albums.map(album => { 
                 return (<div className="my_albums-item-wrapper" key={album.id}>
-                          <div className="my_albums-item" onClick={() => navigate(`/photo/album/${album.id}`)} onMouseOver={() => setViewEditIcon(album.id)} onMouseLeave={() => setViewEditIcon(null)}>
-                            {album.cover !== undefined ? <img src={`${store.API_URL_UPLOADS + store.user.email.split('@')[0]}/albums/${album.albumTitle}/${album.cover}`} alt={album.albumTitle} /> : null}
+                          <div className="my_albums-item" onClick={() => {navigate(`/photo/album/${album.id}`)}} onMouseOver={() => setViewEditIcon(album.id)} onMouseLeave={() => setViewEditIcon(null)}>
+                            {album.cover !== undefined && album.cover !== null && album.cover !== '' ? <img src={`${store.API_URL_UPLOADS + store.user.email.split('@')[0]}/albums/${album.albumTitle}/${album.cover}`} alt={album.albumTitle} /> : null}
                             <div className="my_albums-item-title">
                                 <p style={{textAlign: "left"}}>{album.albumTitle}</p>
                                 <p style={{textAlign: "right"}}>{album.photo.length}</p>
@@ -157,7 +151,7 @@ function PhotoAlbums () {
                           </div>)
               })}
             </>
-          : null}
+          : <div className="loader"></div>}
         </div>
         {viewModalAlbum ? <ModalAddAlbum /> : <></>}
         {viewModalAddPhoto ? <ModalAddPhoto /> : <></>}

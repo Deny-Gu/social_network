@@ -4,6 +4,7 @@ const RecordsService = require('../service/records-service');
 const ApiError = require('../exceptions/api-error');
 const AlbumsService = require('../service/albums-service');
 const fs = require('fs');
+const path = require("path");
 
 class UserController {
     async registration (req, res, next) {
@@ -185,12 +186,23 @@ class UserController {
 
     async removeAlbum (req, res, next) {
         try {
-            const { id, titleAlbum } = req.body;
+            const { id, email, albumTitle } = req.body;
             const album = await AlbumsService.removeAlbum(id);
-            fs.unlink(`./uploads/${email.split('@')[0]}/albums/` + titleAlbum, err => {
-                if(err) throw err;
-                console.log('Файл успешно удалён');
-             });
+
+            fs.readdir(`./uploads/${email.split('@')[0]}/albums/` + albumTitle, (err, files) => {
+                if (err) throw err;
+                for (const file of files) {
+                    AlbumsService.removePhotoAlbum(albumTitle, file)
+                  fs.unlink(path.join(`./uploads/${email.split('@')[0]}/albums/` + albumTitle, file), (err) => {
+                    if (err) throw err;
+                  });
+                }
+                return fs.rmdir(`./uploads/${email.split('@')[0]}/albums/` + albumTitle, err => {
+                    if(err) throw err;
+                    console.log('Папка успешно удалена');
+                 });
+              });
+
             return res.json(album)
         } catch (e) {
             next(e)
@@ -241,6 +253,29 @@ class UserController {
             const { id, cover } = req.body;
             const albumCover = await AlbumsService.editCover(id, cover);
             return res.json(albumCover)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async editAlbumTitle (req, res, next) {
+        try {
+            const { id, email, oldAlbumTitle, albumTitle } = req.body;
+            const album = await AlbumsService.editAlbumTitle(id, albumTitle);
+
+            fs.readdir(`./uploads/${email.split('@')[0]}/albums/` + oldAlbumTitle, (err, files) => {
+                if (err) throw err;
+                for (const file of files) {
+                    AlbumsService.editAlbumTitlePhoto(file, oldAlbumTitle, albumTitle)
+                }
+              });
+
+            fs.rename(`./uploads/${email.split('@')[0]}/albums/` + oldAlbumTitle, `./uploads/${email.split('@')[0]}/albums/` + albumTitle, (err) => {
+                if (err) throw err;
+                console.log('renamed complete');
+              });
+
+            return res.json(album)
         } catch (e) {
             next(e)
         }

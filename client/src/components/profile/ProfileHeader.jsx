@@ -23,11 +23,13 @@ function ProfileHeader() {
 
   function NavAvatar() {
     return (
-      <div className="nav-avatar-wrapper">
-        <button onClick={() => { setViewAvatar(true); setIsNavAvatar(false) }}><HiOutlinePhoto style={{ fontSize: '21px', color: '#5181b8', paddingBottom: '3px', paddingRight: '7px', verticalAlign: "middle" }} /> Открыть фотографию</button>
-        <button onClick={() => { setRefreshAvatar(true); setIsNavAvatar(false) }}><VscEdit style={{ fontSize: '21px', color: '#5181b8', paddingBottom: '3px', paddingRight: '7px', verticalAlign: "middle" }} /> Обновить фотографию</button>
-        <button onClick={() => { setRemoveAvatar(true); setIsNavAvatar(false) }}><GoTrash style={{ fontSize: '20px', color: '#e90000', paddingBottom: '3px', paddingRight: '7px', verticalAlign: "middle" }} /> Удалить фотграфию</button>
-      </div>
+      <>
+        {store.user.id === store.userProfile.id && <div className="nav-avatar-wrapper">
+          {store.userProfile.avatar && <button onClick={() => { setViewAvatar(true); setIsNavAvatar(false) }}><HiOutlinePhoto style={{ fontSize: '21px', color: '#5181b8', paddingBottom: '3px', paddingRight: '7px', verticalAlign: "middle" }} /> Открыть фотографию</button>}
+          <button onClick={() => { setRefreshAvatar(true); setIsNavAvatar(false) }}><VscEdit style={{ fontSize: '21px', color: '#5181b8', paddingBottom: '3px', paddingRight: '7px', verticalAlign: "middle" }} /> Обновить фотографию</button>
+          {store.userProfile.avatar && <button onClick={() => { setRemoveAvatar(true); setIsNavAvatar(false) }}><GoTrash style={{ fontSize: '20px', color: '#e90000', paddingBottom: '3px', paddingRight: '7px', verticalAlign: "middle" }} /> Удалить фотграфию</button>}
+        </div>}
+      </>
     )
   }
 
@@ -35,7 +37,7 @@ function ProfileHeader() {
     return (
       <div className="avatar-popup-wrapper">
         <div className="avatar-popup">
-          <img src={store.API_URL_UPLOADS + store.user.email.split('@')[0] + "/avatar/" + store.user.avatar} alt='profile_avatar'></img>
+          <img src={store.API_URL_UPLOADS + store.userProfile.email.split('@')[0] + "/avatar/" + store.userProfile.avatar} alt='profile_avatar'></img>
         </div>
         <div className="avatar-popup-close">
           <AiOutlineClose style={{ color: "white", fontSize: "30px", cursor: "pointer" }} onClick={() => { setViewAvatar(false); setIsNavAvatar(false) }} />
@@ -49,7 +51,7 @@ function ProfileHeader() {
 
     const formData = new FormData();
     formData.append("image", avatar);
-    formData.append("email", store.user.email);
+    formData.append("email", store.userProfile.email);
 
     fetch('http://localhost:5000/api/upload', {
       method: 'POST',
@@ -109,7 +111,7 @@ function ProfileHeader() {
           </div>
           <div className="refresh-footer">
             <button className="remove-avatar-btn-cancel" onClick={() => {setRemoveAvatar(false)}}>Отмена</button>
-            <button className="remove-avatar-btn-ok" onClick={() => {store.removeAvatar(store.user.email); setRemoveAvatar(false)}}>Удалить</button>
+            <button className="remove-avatar-btn-ok" onClick={() => {store.removeAvatar(store.userProfile.email); setRemoveAvatar(false)}}>Удалить</button>
           </div>
         </div>
       </div>
@@ -119,41 +121,44 @@ function ProfileHeader() {
   return (
     <div className='profile_header'>
       <div className='profile_avatar' onMouseOver={() => { setIsNavAvatar(true) }} onMouseOut={() => { setIsNavAvatar(false) }}>
-        {store.user.avatar ? <img src={store.API_URL_UPLOADS + store.user.email.split('@')[0] + "/avatar/" + store.user.avatar} alt='profile_img'></img> : null}
+        {store.userProfile.avatar ? <img src={store.API_URL_UPLOADS + store.userProfile.email.split('@')[0] + "/avatar/" + store.userProfile.avatar} onClick={() => { setViewAvatar(true) }} alt='profile_img'></img> : null}
         {isNavAvatar ? <NavAvatar /> : <></>}
       </div>
       <div className='profile_info'>
-        <button id='profile_edit_btn' onClick={() => { navigate(`/profile-edit`) }}>Редактировать профиль</button>
-        <h1>{store.user.firstname} {store.user.lastname}</h1>
+        {store.user.id === store.userProfile.id ? 
+          <button id='profile_edit_btn' onClick={() => { navigate(`/profile-edit`) }}>Редактировать профиль</button> :
+          <button id='profile_add-friend_btn' onClick={() => { }}>Добавить в друзья</button>
+        }
+        <h1>{store.userProfile.firstname} {store.userProfile.lastname}</h1>
         <p>
           <span className="sidebar_icon">
             <HiOutlineGift />
           </span>
-          День рождения: {store.user.birthday}
+          День рождения: {store.userProfile.birthday}
         </p>
         <p>
           <span className="sidebar_icon">
             <BsTelephone />
           </span>
-          Телефон: {store.user.phone}
+          Телефон: {store.userProfile.phone}
         </p>
         <p>
           <span className="sidebar_icon">
             <HiOutlineHome />
           </span>
-          Город: {store.user.city}
+          Город: {store.userProfile.city}
         </p>
         <p>
           <span className="sidebar_icon">
             <PiStudent />
           </span>
-          Образование: {store.user.education}
+          Образование: {store.userProfile.education}
         </p>
         <p>
           <span className="sidebar_icon">
             <BsLayoutTextSidebarReverse />
           </span>
-          Обо мне: {store.user.aboutMe}
+          Обо мне: {store.userProfile.aboutMe}
         </p>
       </div>
       {viewAvatar ? <ViewAvatarPopup /> : <></>}

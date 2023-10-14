@@ -12,8 +12,8 @@ export default class AlbumsService {
         return $api.post<AuthResponse>('/add-album', {email, idUser, albumTitle})
     }
 
-    static removeAlbum(id: number, titleAlbum: string): Promise<AxiosResponse<AuthResponse>> {
-        return $api.post<AuthResponse>('/remove-album', {id, titleAlbum})
+    static removeAlbum(id: number, email: string, albumTitle: string): Promise<AxiosResponse<AuthResponse>> {
+        return $api.post<AuthResponse>('/remove-album', {id, email, albumTitle})
     }
 
     static getPhoto(idUser: string): Promise<any> {
@@ -26,6 +26,10 @@ export default class AlbumsService {
 
     static editCover(id: number, cover: string): Promise<AxiosResponse<AuthResponse>> {
         return $api.post<AuthResponse>('/edit-cover', {id, cover})
+    }
+
+    static editTitleAlbum(id: number, email: string, oldAlbumTitle: string, albumTitle: string): Promise<AxiosResponse<AuthResponse>> {
+        return $api.post<AuthResponse>('/edit-title-album', {id, email, oldAlbumTitle, albumTitle})
     }
 
 }

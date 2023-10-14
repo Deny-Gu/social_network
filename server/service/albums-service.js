@@ -39,6 +39,11 @@ class AlbumsService {
       return photoImage ;
     }
 
+    async removePhotoAlbum(albumTitle, photo) {
+      const photoImage  = await PhotoModel.destroy({ where: { albumTitle: albumTitle, photo: photo } });
+      return photoImage ;
+    }
+
     async editCover(id, cover) {
       const albumCover = await AlbumsModel.update({ cover: cover },{ where: { id: id }});
       return albumCover;
@@ -48,6 +53,12 @@ class AlbumsService {
       const album = await AlbumsModel.update({ albumTitle: albumTitle },{ where: { id: id }});
       return album;
     }
+
+    async editAlbumTitlePhoto(photo, oldAlbumTitle, albumTitle) {
+      const albumPhoto = await PhotoModel.update({ albumTitle: albumTitle },{ where: { albumTitle: oldAlbumTitle, photo: photo }});
+      return albumPhoto;
+    }
+
 }
 
 module.exports = new AlbumsService();

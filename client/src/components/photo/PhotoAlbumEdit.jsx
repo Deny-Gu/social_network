@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
 import { Context } from "../..";
 import { observer } from 'mobx-react-lite';
@@ -7,12 +8,32 @@ import { AiOutlineClose } from 'react-icons/ai';
 
 function PhotoAlbumEdit () {
     const { store } = useContext(Context);
+    const navigate = useNavigate();
+    let location = useLocation();
     const [viewDeleteIcon, setViewDeleteIcon] = useState(null);
     const [viewDeleteIconText, setViewDeleteIconText] = useState(null);
     const [showModalDeletePhoto, setShowModalDeletePhoto] = useState(null);
     const [photoPreview, setPhotoPreview] = useState(null);
     const [index, setIndex] = useState(null);
     const [showModalEditCover, setShowModalEditCover] = useState(null);
+    const [oldTitle, setOldTitle] = useState('');
+    const [editTitle, setEditTitle] = useState('');
+    const [showModalDeleteAlbum, setShowModalDeleteAlbum] = useState(null);
+
+    const [albumEdit, setAlbumEdit] = useState(null);
+
+    useEffect(() => {
+        if (store.albums.length !== undefined) {
+            store.albums.map(album => {
+                if (album.id === Number(location.pathname.match(/\d+/g))) {
+                    setOldTitle(album.albumTitle);
+                    setEditTitle(album.albumTitle);
+                    return setAlbumEdit(album);
+                }
+            })
+            store.setEditAlbum(albumEdit);
+        }
+    }, [store, store.albums, albumEdit, location.pathname])
 
     function viewEditCoverBtn (selector) {
         let block = document.querySelector(selector);
@@ -30,6 +51,11 @@ function PhotoAlbumEdit () {
         newObj.photo.splice(i, 1);
         if (newObj.photo.length === 0) {
             newObj.cover = ''
+            store.editCover(photo.idAlbum, store.user.id, '');
+        } 
+        if (newObj.cover === photo.photo) {
+            newObj.cover = ''
+            store.editCover(photo.idAlbum, store.user.id, ''); 
         }
         store.setEditAlbum(newObj);
         store.removePhoto(photo.id, store.user.email, photo.albumTitle, photo.photo, store.user.id);
@@ -43,6 +69,17 @@ function PhotoAlbumEdit () {
         store.editCover(photo.idAlbum, store.user.id, photo.photo); 
         setShowModalEditCover(false);
     }
+
+    async function editTitleAlbum (id, newTitle) {
+        const promise = await store.editTitleAlbum(id, store.user.email, oldTitle, newTitle, store.user.id)
+
+        let newObj = {};
+        Object.assign(newObj, store.editAlbum);
+        newObj.albumTitle = newTitle;
+        newObj.photo.map(photo => photo.albumTitle = newTitle);
+        store.setEditAlbum(newObj);
+        setOldTitle(newTitle);
+    };
 
     function ModalDeletePhoto () {
         return (
@@ -59,6 +96,26 @@ function PhotoAlbumEdit () {
                 {photoPreview ? <img className="preview-delete-photo" src={`${store.API_URL_UPLOADS + store.user.email.split('@')[0]}/albums/${store.editAlbum.albumTitle}/${photoPreview.photo}`} alt="preview-avatar" /> : <></>}
                 <button id="modal-delete-photo-btn-cancel" onClick={() => setShowModalDeletePhoto(false)}>Отмена</button>
                 <button id="modal-delete-photo-btn-succes" onClick={() => {deletePhoto(photoPreview, index); setShowModalDeletePhoto(false)}}>Удалить</button>
+              </div>
+            </div>
+          </div>
+        )
+    };
+
+    function ModalDeleteAlbum () {
+        return (
+            <div className="avatar-refresh-popup-wrapper">
+            <div className="avatar-refresh-popup">
+              <div className="refresh-header">
+                <h3>Удалить альбом</h3>
+                <div className="avatar-refresh-popup-close">
+                  <AiOutlineClose style={{ color: "#6f7985", fontSize: "20px", cursor: "pointer" }} onClick={() => setShowModalDeleteAlbum(false)} />
+                </div>
+              </div>
+              <div className="refresh-content">
+                <p>Выточно хотите удалить альбом {store.editAlbum.albumTitle} и все фотографии в нем?</p>
+                <button id="modal-delete-photo-btn-cancel" onClick={() => setShowModalDeleteAlbum(false)}>Отмена</button>
+                <button id="modal-delete-photo-btn-succes" onClick={() => {store.removeAlbum(store.editAlbum.id, store.user.email, store.editAlbum.albumTitle, store.user.id); setShowModalDeleteAlbum(false);  navigate(`/photo/`)}}>Удалить</button>
               </div>
             </div>
           </div>
@@ -93,6 +150,12 @@ function PhotoAlbumEdit () {
         )
     };
 
+    if (store.editAlbum === null || store.editAlbum.length === 0) {
+        return (
+            <div className="loader"></div>
+        )
+    }
+
     return (
         <div className="photo-my_albums">
             <div className="photo-my_albums-header">
@@ -105,7 +168,7 @@ function PhotoAlbumEdit () {
                         <span>Редактирование альбома</span>
                     </div>
                     <div className="photo-my_albums-header-block-remove_album">
-                        <button id="remove_album-btn" onClick={() => {}}>Удалить альбом</button>
+                        <button id="remove_album-btn" onClick={() => setShowModalDeleteAlbum(true)}>Удалить альбом</button>
                     </div>
                 </div>
             </div>
@@ -122,8 +185,8 @@ function PhotoAlbumEdit () {
                 </div>
                 <div className="photo-my_albums-content-edit-name">
                     <h4>Название альбома</h4>
-                    <input type="text" value={store.editAlbum.albumTitle} readOnly/>
-                    <button>Сохранить изменения</button>
+                    <input type="text" value={editTitle} onChange={(e) => setEditTitle(e.target.value)}/>
+                    <button onClick={() => editTitleAlbum(store.editAlbum.id, editTitle)}>Сохранить изменения</button>
                 </div>
             </div>
             <span className="line"></span>
@@ -135,7 +198,7 @@ function PhotoAlbumEdit () {
                     {store.editAlbum.photo.map((photo, i) => {
                                 return (
                                     <div className="content-photo-all-item" key={photo.id}  onMouseOver={() => setViewDeleteIcon(photo)} onMouseLeave={() => setViewDeleteIcon(null)}>
-                                        <img src={`${store.API_URL_UPLOADS + store.user.email.split('@')[0]}/albums/${photo.albumTitle}/${photo.photo}`} alt={photo} />
+                                        {photo.photo ? <img src={`${store.API_URL_UPLOADS + store.user.email.split('@')[0]}/albums/${photo.albumTitle}/${photo.photo}`} alt={photo.photo} /> : null}
                                         {viewDeleteIcon === photo ? <div className="content-photo-all-item-remove" onClick={() => {setShowModalDeletePhoto(true); setPhotoPreview(photo); setIndex(i)}}  onMouseOut={() => setViewDeleteIconText(photo)} onMouseLeave={() => setViewDeleteIconText(null)}>
                                                                         <AiOutlineClose />
                                                                         {viewDeleteIconText === photo ? <div className="my_albums-item-edit-icon">
@@ -150,6 +213,7 @@ function PhotoAlbumEdit () {
             </div>
             {showModalDeletePhoto ? <ModalDeletePhoto /> : null}
             {showModalEditCover ? <ModalEditCover /> : null}
+            {showModalDeleteAlbum ? <ModalDeleteAlbum /> : null}
         </div>
     )
 };

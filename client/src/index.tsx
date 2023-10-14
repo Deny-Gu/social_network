@@ -12,7 +12,8 @@ import Photo from './components/photo/Photo';
 import ProfileId from './components/profile/ProfileId';
 import PhotoAlbumEdit from './components/photo/PhotoAlbumEdit';
 import PhotoAlbumPage from './components/photo/PhotoAlbumPage';
-
+import FriendsPage from './components/friends/FriendsPage';
+import FriendsSearchPage from './components/friends/FriendsSearchPage';
 
 interface State {
   store: Store
@@ -30,18 +31,24 @@ let router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        index: true,
+        path: "",
         element: <ProfileId />
-
       },
       {
         path: "/:id",
         element: <Profile />
-
       },
       {
         path: "/profile-edit",
         element: <ProfileEdit />
+      },
+      {
+        path: "/friends",
+        element: <FriendsPage />
+      },
+      {
+        path: "/friends-search",
+        element: <FriendsSearchPage />
       },
       {
         path: "/photo",

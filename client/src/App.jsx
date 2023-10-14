@@ -2,11 +2,13 @@ import React, { useContext, useEffect } from 'react';
 import { Context } from './index';
 import { observer } from 'mobx-react-lite';
 import './css/index.css'
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import SideBar from './components/SideBar';
+import ProfileEdit from './components/profile/ProfileEdit';
 
 const App = (props) => {
-  const { store } = useContext(Context)
+  const { store } = useContext(Context);
+  let location = useLocation();
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -21,8 +23,25 @@ const App = (props) => {
   }
 
   if (!store.isAuth) {
+    store.setLocation(location.pathname);
     return (
       <Navigate to="/login" />
+    )
+  }
+
+  if (store.user.id) {
+    // store.getRecords(store.user.id);
+    store.getAlbums(store.user.id);
+    store.getPhoto(store.user.id);
+    store.getUsers();
+  }
+
+  if (!store.user.firstname || !store.user.firstname) {
+    return (
+      <div id="page_layout">
+          <ProfileEdit />
+      </div>
+
     )
   }
 

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { Context } from "../..";
 import { observer } from 'mobx-react-lite';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
@@ -13,6 +13,11 @@ function ProfileRecordsList() {
   const [select, setSelect] = useState(null);
   const [msg, setMsg] = useState('');
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    store.setRecords({})
+    store.getRecords(store.userProfile.id)
+  }, [store])
 
   function onEmojiClick (emojiObject, event) {
     const { selectionStart, selectionEnd } = inputRef.current
@@ -65,6 +70,12 @@ function ProfileRecordsList() {
     block.classList.remove(classOn);
   }
 
+  if (store.loadingRecords) {
+    return (
+      <div className="loader"></div>
+    )
+  }
+
   return (
     <div className='profile_records_list'>
       {!(store.records.length === undefined) ? store.records.toReversed().map((record, index) => {
@@ -73,8 +84,8 @@ function ProfileRecordsList() {
             return (
               <div className="record-wrapper" key={Math.random()}>
                 <div className="record-head">
-                  {store.users[i].avatar ? <img src={store.API_URL_UPLOADS + store.user.email.split('@')[0] + "/avatar/" + store.users[i].avatar} alt='profile_img'></img> : null}
-                  <h3><Link to={`/${store.users[i].email}`} >{store.users[i].firstname} {store.users[i].lastname}</Link></h3>
+                  {store.users[i].avatar ? <img src={store.API_URL_UPLOADS + store.users[i].email.split('@')[0] + "/avatar/" + store.users[i].avatar} alt='profile_img'></img> : null}
+                  <h3><Link to={`/id${store.users[i].id}`} onClick={() => {store.setUserProfile(store.users[i]); store.getRecords(store.users[i].id)}} >{store.users[i].firstname} {store.users[i].lastname}</Link></h3>
                   <p>{record.date}</p>
                 </div>
                 <div className="record-message">
@@ -88,10 +99,10 @@ function ProfileRecordsList() {
                     record.message
                   }
                 </div>
-                <div className="record-edit-btn" onMouseOver={(e) => {setViewNavRecord(index)}} onMouseLeave={() => setViewNavRecord(null)}>
+                {(store.user.id === record.idUser || store.user.id === record.idFrom)? <div className="record-edit-btn" onMouseOver={(e) => {setViewNavRecord(index)}} onMouseLeave={() => setViewNavRecord(null)}>
                   <IoEllipsisHorizontalSharp style={{ color: "grey", fontSize: "24px", cursor: "pointer" }}/>
                   <NavRecord index={index} idRecord={record.id} message={record.message} />
-                </div>
+                </div> : null}
               </div>
             )
           }

@@ -20,16 +20,19 @@ configure({
 export default class Store {
     user = {} as IUser;
     users = [];
+    userProfile = {} as IUser;
     records = {} as IRecords;
     albums = {} as IAlbums;
     photo = {} as IPhoto;
     editAlbum = [];
+    viewAlbum = [];
     isAuth = false;
     isLoading = false;
     isLoadingUsers = false;
     isLoadingRecords = false;
     isLoadingAlbums = false;
     isLoadingPhoto = false;
+    location = '';
     error = '';
     API_URL_UPLOADS = 'http://localhost:5000/uploads/'
 
@@ -43,10 +46,15 @@ export default class Store {
 
     setUser(user: IUser) {
         this.user = user;
+        this.userProfile = user;
     }
 
     setUsers(users: any) {
         this.users = users;
+    }
+
+    setUserProfile(user: IUser) {
+        this.userProfile = user;
     }
 
     setRecords(records: any) {
@@ -63,6 +71,10 @@ export default class Store {
 
     setEditAlbum(album: any) {
         this.editAlbum = album;
+    }
+
+    setViewAlbum(album: any) {
+        this.viewAlbum = album;
     }
 
     setLoading(bool: boolean) {
@@ -83,6 +95,10 @@ export default class Store {
 
     setLoadingPhoto(bool: boolean) {
         this.isLoadingPhoto = bool;
+    }
+
+    setLocation(location: string) {
+        this.location = location;
     }
 
     setError(error: string) {
@@ -120,7 +136,8 @@ export default class Store {
             const response = await AuthService.logout();
             localStorage.removeItem('token');
             this.setAuth(false);
-            this.setUser({} as IUser)
+            this.setUser({} as IUser);
+            this.location = ''
         } catch (e: any) {
             console.log(e.response?.data?.message)
         }
@@ -258,10 +275,20 @@ export default class Store {
         }
     }
 
-    async removeAlbum(id: number, titleAlbum: string, idUser: string) {
+    async removeAlbum(id: number, email: string, albumTitle: string, idUser: string) {
         try {
-            const response = await AlbumsService.removeAlbum(id, titleAlbum);
+            const response = await AlbumsService.removeAlbum(id, email, albumTitle);
             this.getAlbums(idUser)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
+    async editTitleAlbum(id: number, email: string, oldAlbumTitle: string, albumTitle: string, idUser: string) {
+        try {
+            const response = await AlbumsService.editTitleAlbum(id, email, oldAlbumTitle, albumTitle);
+            this.getAlbums(idUser)
+            this.getPhoto(idUser)
         } catch (e: any) {
             this.setError(e.response?.data?.message)
         }

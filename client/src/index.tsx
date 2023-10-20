@@ -14,6 +14,7 @@ import PhotoAlbumEdit from './components/photo/PhotoAlbumEdit';
 import PhotoAlbumPage from './components/photo/PhotoAlbumPage';
 import FriendsPage from './components/friends/FriendsPage';
 import FriendsSearchPage from './components/friends/FriendsSearchPage';
+import FriendsRequestsPage from './components/friends/FriendsRequestsPage';
 
 interface State {
   store: Store
@@ -45,6 +46,10 @@ let router = createBrowserRouter([
       {
         path: "/friends",
         element: <FriendsPage />
+      },
+      {
+        path: "/friends-requests",
+        element: <FriendsRequestsPage />
       },
       {
         path: "/friends-search",

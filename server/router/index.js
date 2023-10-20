@@ -29,6 +29,13 @@ router.post('/get-photo', UserController.getPhoto)
 router.post('/add-photo', UserController.addPhoto)
 router.post('/remove-photo', UserController.removePhoto)
 router.post('/edit-cover', UserController.editCover)
+router.post('/get-requests-incoming', UserController.getRequestsIncoming)
+router.post('/get-requests-outgoing', UserController.getRequestsOutgoing)
+router.post('/add-requests', UserController.addRequests)
+router.post('/remove-requests', UserController.removeRequests)
+router.post('/get-friends', UserController.getFriends)
+router.post('/add-friend', UserController.addFriend)
+router.post('/remove-friend', UserController.removeFriend)
 
 
 

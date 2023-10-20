@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Context } from "../..";
 import { observer } from 'mobx-react-lite';
@@ -20,6 +20,21 @@ function ProfileHeader() {
   const [refreshAvatar, setRefreshAvatar] = useState(false);
   const [removeAvatar, setRemoveAvatar] = useState(false);
   const [avatar, setAvatar] = useState(null);
+  const [requestsOutgoing, setRequestsOutgoing] = useState(false);
+  const [friendAccess, setFriendAccess] = useState(false);
+
+  useEffect(() => {
+    store.requestsOutgoing.map((req) => {
+        if (req.idUserTo === store.userProfile.id) {
+          return setRequestsOutgoing(true)
+        }
+      })
+    store.friends.map((friend) => {
+      if (friend.id === store.userProfile.id) {
+        return setFriendAccess(true)
+      }
+    })
+  },[]) 
 
   function NavAvatar() {
     return (
@@ -118,6 +133,17 @@ function ProfileHeader() {
     )
   }
 
+  function ButtonProfile () {
+    if (requestsOutgoing) {
+      return <button id='profile_waiting-requests-friend_btn' onClick={() => { }}>Запрос отправлен</button>
+    } if (friendAccess) {
+      return <button id='profile_waiting-requests-friend_btn' onClick={() => { }}>Сообщение</button>
+    } else {
+      return <button id='profile_add-friend_btn' onClick={() => store.addRequests(store.user.id, store.userProfile.id)}>Добавить в друзья</button>
+    }
+  };
+
+
   return (
     <div className='profile_header'>
       <div className='profile_avatar' onMouseOver={() => { setIsNavAvatar(true) }} onMouseOut={() => { setIsNavAvatar(false) }}>
@@ -127,7 +153,11 @@ function ProfileHeader() {
       <div className='profile_info'>
         {store.user.id === store.userProfile.id ? 
           <button id='profile_edit_btn' onClick={() => { navigate(`/profile-edit`) }}>Редактировать профиль</button> :
-          <button id='profile_add-friend_btn' onClick={() => { }}>Добавить в друзья</button>
+          <ButtonProfile />
+          // <>
+          //   {requestsOutgoing ? <button id='profile_waiting-requests-friend_btn' onClick={() => { }}>Запрос отправлен</button> :
+          //   <button id='profile_add-friend_btn' onClick={() => store.addRequests(store.user.id, store.userProfile.id)}>Добавить в друзья</button>}
+          // </>
         }
         <h1>{store.userProfile.firstname} {store.userProfile.lastname}</h1>
         <p>

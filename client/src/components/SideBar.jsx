@@ -26,6 +26,7 @@ function SideBar() {
                                 <HiOutlineUsers />
                             </span>
                             <Link to="/friends">Друзья</Link>
+                            {store.requestsIncoming.length > 0 && <span className='requests-score'>{store.requestsIncoming.length}</span>}
                         </li>
                         <li>
                             <span className="sidebar_icon">

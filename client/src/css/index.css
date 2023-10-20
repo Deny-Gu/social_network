@@ -290,6 +290,17 @@ header {
     background-color: #ddddf5;
 }
 
+#profile_waiting-requests-friend_btn {
+    position: absolute;
+    right: 20px;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    background-color: #b3c6df;
+}
+
 main {
     height: 90vh;
     display: flex;
@@ -316,7 +327,7 @@ main {
 }
 
 #sidebar li {
-    padding: 3px 0;
+    padding: 3px 5px 3px 0;
 }
 
 #sidebar li:hover {
@@ -1578,9 +1589,9 @@ input[type="file"]{
 
 #friends-all-btn {
     float: left;
-    padding: 8px 10px;
+    padding: 5px 10px;
     margin-top: 5px;
-    background-color: #fff;
+    margin-right: 5px;
     border: none;
     font-size: 14px;
     font-weight: 600;
@@ -1590,14 +1601,17 @@ input[type="file"]{
 }
 
 #friends-all-btn:hover {
-    background-color: #ededed;
+    background-color: #aeb7c21f;
+}
+
+.friends-all-btn-active {
+    background-color: #aeb7c21f;
 }
 
 #friends-online-btn {
     float: left;
-    padding: 8px 10px;
+    padding: 5px 10px;
     margin-top: 5px;
-    background-color: #fff;
     border: none;
     font-size: 14px;
     font-weight: 600;
@@ -1607,7 +1621,7 @@ input[type="file"]{
 }
 
 #friends-online-btn:hover {
-    background-color: #ededed;
+    background-color: #aeb7c21f;
 }
 
 #friends-search-btn {
@@ -1686,26 +1700,27 @@ input[type="file"]{
 }
 
 .friends-page-search-content {
+    margin-bottom: 10px;
     padding: 5px;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 7px;
 }
 
 .friends-page-user {
     width: 32%;
-    height: 210px;
+    border: 1px solid #ededed;
+    border-radius: 5px;
 }
 
 .friends-page-user-photo img {
-    width: 170px;
+    width: 100%;
     height: 170px;
     object-fit: cover;
-    border-radius: 3px;
 }
 
 .friends-page-user-info {
-    margin: 0 2px 5px 2px;
+    margin: 0 4px 5px;
     position: relative;
 }
 
@@ -1733,10 +1748,100 @@ input[type="file"]{
     border-radius: 3px;
 }
 
+.friends-incoming-user {
+    display: flex;
+    padding: 3px 10px 0;
+}
+
+.friends-incoming-user-avatar img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.friends-incoming-user-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.friends-incoming-user-content a {
+    margin-left: 15px;
+    margin-top: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #2a5885;
+    text-align: left;
+}
+
+.friends-incoming-user-content a:hover {
+    text-decoration: underline;
+    color: #2a5885;
+}
+
+#friends-incoming-user-accept {
+    cursor: pointer;
+    padding: 7px 10px;
+    margin-top: 15px;
+    margin-left: 15px;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: #5181b8;
+}
+
+#friends-incoming-user-accept:hover {
+    background-color: #688fbb;
+}
+
+#friends-incoming-user-cancel {
+    cursor: pointer;
+    padding: 7px 10px;
+    margin-top: 15px;
+    margin-left: 15px;
+    border: none;
+    border-radius: 5px;
+    color: #5181b8;
+    background-color: #aeb7c21f;
+}
+
+#friends-incoming-user-cancel:hover {
+    background-color: #7e8da031;
+}
+
+.friend-access-icon {
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+}
+
+.friend-access-icon svg {
+    color: green;
+}
+
+.requests-waiting {
+    position: absolute;
+    right: 0;
+    height: 22px;
+    background-color: #fff;
+    color: #000;
+}
+
+.requests-score {
+    width: 16px;
+    background-color: #5181b8;
+    color: #fff;
+    float: right;
+    border-radius: 50%;
+    text-align: center;
+    padding-right: 2px;
+}
+
 .profile_records_add .EmojiPickerReact {
     --epr-emoji-size: 25px;
     --epr-emoji-padding: 2px;
-    --epr-category-labrgbht: 20px;
+    --epr-category-label-height: 20px;
     --epr-header-padding: 10px var(--epr-horizontal-padding);
     --epr-horizontal-padding: 5px;
 }

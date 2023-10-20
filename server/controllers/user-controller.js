@@ -3,6 +3,8 @@ const userService = require('../service/user-service');
 const RecordsService = require('../service/records-service');
 const ApiError = require('../exceptions/api-error');
 const AlbumsService = require('../service/albums-service');
+const RequestsService = require('../service/requests-service');
+const FriendsService = require('../service/friends-service')
 const fs = require('fs');
 const path = require("path");
 
@@ -276,6 +278,76 @@ class UserController {
               });
 
             return res.json(album)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getRequestsIncoming (req, res, next) {
+        try {
+            const {idUserTo} = req.body;
+            const requests = await RequestsService.getRequestsIncoming(idUserTo);
+            return res.json(requests)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getRequestsOutgoing (req, res, next) {
+        try {
+            const {idUserFrom} = req.body;
+            const requests = await RequestsService.getRequestsOutgoing(idUserFrom);
+            return res.json(requests)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async addRequests (req, res, next) {
+        try {
+            const { idUserFrom, idUserTo } = req.body;
+            const album = await RequestsService.addRequests(idUserFrom, idUserTo);
+            return res.json(album)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async removeRequests (req, res, next) {
+        try {
+            const { id } = req.body;
+            const requests = await RequestsService.removeRequests(id);
+            return res.json(requests)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getFriends (req, res, next) {
+        try {
+            const {idUser} = req.body;
+            const friends = await FriendsService.getFriends(idUser);
+            return res.json(friends)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async addFriend (req, res, next) {
+        try {
+            const { idUser, idFriend } = req.body;
+            const friend = await FriendsService.addFriend(idUser, idFriend);
+            return res.json(friend)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async removeFriend (req, res, next) {
+        try {
+            const { id } = req.body;
+            const friend = await FriendsService.removeFriend(id);
+            return res.json(friend)
         } catch (e) {
             next(e)
         }

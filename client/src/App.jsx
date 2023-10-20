@@ -34,7 +34,11 @@ const App = (props) => {
     store.getAlbums(store.user.id);
     store.getPhoto(store.user.id);
     store.getUsers();
+    store.getFriends(store.user.id);
+    store.getRequestsIncoming(store.user.id);
+    store.getRequestsOutgoing(store.user.id);
   }
+
 
   if (!store.user.firstname || !store.user.firstname) {
     return (

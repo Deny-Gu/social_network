@@ -12,6 +12,10 @@ import { IAlbums } from "../models/IAlbums";
 import AlbumsService from "../services/AlbumsService";
 import { IPhoto } from "../models/IPhoto";
 import { configure } from "mobx"
+import { IRequests } from "../models/IRequests";
+import RequestsService from "../services/RequestsService";
+import { IFriends } from "../models/IFriends";
+import FriendsService from './../services/FriendsService';
 
 configure({
     enforceActions: "never",
@@ -21,17 +25,23 @@ export default class Store {
     user = {} as IUser;
     users = [];
     userProfile = {} as IUser;
+    friends = {} as IFriends;
     records = {} as IRecords;
     albums = {} as IAlbums;
     photo = {} as IPhoto;
+    requestsIncoming = {} as IRequests;
+    requestsOutgoing = {} as IRequests;
     editAlbum = [];
     viewAlbum = [];
     isAuth = false;
     isLoading = false;
     isLoadingUsers = false;
+    isLoadingFriends = false;
     isLoadingRecords = false;
     isLoadingAlbums = false;
     isLoadingPhoto = false;
+    isLoadingRequestsIncoming = false;
+    isLoadingRequestsOutgoing = false;
     location = '';
     error = '';
     API_URL_UPLOADS = 'http://localhost:5000/uploads/'
@@ -107,6 +117,30 @@ export default class Store {
 
     setAvatarUrl(avatarUrl: string) {
         this.user.avatar = avatarUrl;
+    }
+
+    setRequestsIncoming(requests: any) {
+        this.requestsIncoming = requests;
+    }
+
+    setRequestsOutgoing(requests: any) {
+        this.requestsOutgoing = requests;
+    }
+
+    setLoadingRequestsIncoming(bool: boolean) {
+        this.isLoadingRequestsIncoming = bool;
+    }
+
+    setLoadingRequestsOutgoing(bool: boolean) {
+        this.isLoadingRequestsOutgoing = bool;
+    }
+
+    setFriends(friends: any) {
+        this.friends = friends;
+    }
+
+    setLoadingFriends(bool: boolean) {
+        this.isLoadingFriends = bool;
     }
 
     async login(email: string, password: string) {
@@ -319,6 +353,88 @@ export default class Store {
         try {
             const response = await AlbumsService.editCover(id, cover);
             this.getAlbums(idUser)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
+    async getRequestsIncoming(idUserTo: string) {
+        this.setLoadingRequestsIncoming(true)
+        try {
+            const response = await RequestsService.getRequestsIncoming(idUserTo);
+            this.setRequestsIncoming(response.data)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        } finally {
+            this.setLoadingRequestsIncoming(false)
+        }
+    }
+
+    async getRequestsOutgoing(idUserFrom: string) {
+        this.setLoadingRequestsOutgoing(true)
+        try {
+            const response = await RequestsService.getRequestsOutgoing(idUserFrom);
+            this.setRequestsOutgoing(response.data)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        } finally {
+            this.setLoadingRequestsOutgoing(false)
+        }
+    }
+
+    async addRequests(idUserFrom: string, idUserTo: string) {
+        try {
+            const response = await RequestsService.addRequests(idUserFrom, idUserTo);
+            this.getRequestsOutgoing(idUserFrom)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
+    async removeRequests(id: number, idUserFrom: string) {
+        try {
+            const response = await RequestsService.removeRequests(id);
+            this.getRequestsOutgoing(idUserFrom)
+            this.getRequestsIncoming(idUserFrom)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
+    async getFriends(idUser: string) {
+        this.setLoadingFriends(true)
+        try {
+            const friends = await FriendsService.getFriends(idUser);
+            const users = await UserService.fetchUsers()
+            let arr = [];
+            for (let f = 0; f < friends.data.length; f++) {
+                for (let u = 0; u < users.data.length; u++) {
+                    if (friends.data[f].idFriend === users.data[u].id) {
+                        arr.push(users.data[u])
+                    }
+                }
+            }
+            this.setFriends(arr)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        } finally {
+            this.setLoadingFriends(false)
+        }
+    }
+
+    async addFriend(idUser: string, idFriend: string) {
+        try {
+            const response = await FriendsService.addFriend(idUser, idFriend);
+            this.getFriends(idUser)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
+    async removeFriend(id: number, idUser: string) {
+        try {
+            const response = await FriendsService.removeFriend(id);
+            this.getFriends(idUser)
         } catch (e: any) {
             this.setError(e.response?.data?.message)
         }

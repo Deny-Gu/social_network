@@ -35,10 +35,13 @@ function FriendsSearch () {
                                     <Link style={{float: 'left'}} to={`/id${user.id}`} onClick={() => store.setUserProfile(user)}>{user.firstname} {user.lastname}</Link>
                                     {store.requestsOutgoing.map(requests => requests.idUserTo === user.id && <span className="requests-waiting" key={user.id} onMouseOver={() => setViewWaitingIcon(user.id)} onMouseLeave={() => setViewWaitingIcon(null)}><AiOutlineFieldTime fontSize={20} /></span>)}
                                     {viewWaitingIcon === user.id && <div className="add-friend-icon">Запрос отправлен</div>} 
-                                    {store.friends.map(friend => friend.id === user.id && <span className="friend-access-icon" key={user.id} onMouseOver={() => setViewFriendAccesIcon(user.id)} onMouseLeave={() => setViewFriendAccesIcon(null)}><GrUserExpert fontSize={18} color={'green'} /></span>)}
+                                    {store.friends.length && store.friends.map(friend => friend.id === user.id && <span className="friend-access-icon" key={user.id} onMouseOver={() => setViewFriendAccesIcon(user.id)} onMouseLeave={() => setViewFriendAccesIcon(null)}><GrUserExpert fontSize={18} color={'green'} /></span>)}
                                     {viewFriendAccesIcon === user.id && <div className="add-friend-icon">У вас в друзьях</div>} 
                                     <Link style={{float: 'right'}} onClick={() => store.addRequests(store.user.id, user.id)} onMouseOver={() => setViewAddFriendIcon(user.id)} onMouseLeave={() => setViewAddFriendIcon(null)}><GrUserAdd fontSize={18} /></Link>
                                     {viewAddFriendIcon === user.id && <div className="add-friend-icon">Добавить в друзья</div>} 
+                                </div>
+                                <div className="friends-search-user-online">
+                                    {store.usersOnline.map(us => us === user.id && <span key={us}></span>)}
                                 </div>
                             </div>
                         )

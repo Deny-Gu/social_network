@@ -7,9 +7,19 @@ const router = require('./router/index')
 const errormiddleware = require('./middlewares/error-middleware')
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
+const { Server } = require('socket.io');
+const { createServer } = require('node:http');
+const onConnection = require('./socket_io/onConnection')
 
 const PORT = process.env.PORT || 5000;
 const app = express()
+
+const server = createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000",
+    }
+});
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -40,9 +50,13 @@ app.use(
 );
 app.use('/api', router);
 
+io.on("connection", (socket) => {
+    onConnection(io, socket)
+});
+
 const start = async () => {
     try {
-        app.listen(PORT, () => console.log(`Server tarted on PORT = ${PORT}`))
+        server.listen(PORT, () => console.log(`Server tarted on PORT = ${PORT}`))
     } catch (e) {
         console.log(e)
     }

@@ -20,6 +20,9 @@ function FriendsOutgoing () {
                                     <Link style={{float: 'left'}} to={`/id${store.users[i].id}`} onClick={() => store.setUserProfile(store.users[i])}>{store.users[i].firstname} {store.users[i].lastname}</Link>
                                     <button id="friends-incoming-user-accept" onClick={() => store.removeRequests(requests.id, store.user.id)}>Отменить заявку</button>
                                 </div>
+                                <div className="friends-incoming-user-online">
+                                    {store.usersOnline.map(user => user === requests.idUserTo && <p key={user}><span className='online' />Online</p>)}
+                                </div>
                             </div>
                             <div className="line"></div>
                         </div>

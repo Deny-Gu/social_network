@@ -6,7 +6,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import SideBar from './components/SideBar';
 import ProfileEdit from './components/profile/ProfileEdit';
 
-const App = (props) => {
+const App = () => {
   const { store } = useContext(Context);
   let location = useLocation();
 
@@ -30,7 +30,6 @@ const App = (props) => {
   }
 
   if (store.user.id) {
-    // store.getRecords(store.user.id);
     store.getAlbums(store.user.id);
     store.getPhoto(store.user.id);
     store.getUsers();
@@ -38,7 +37,6 @@ const App = (props) => {
     store.getRequestsIncoming(store.user.id);
     store.getRequestsOutgoing(store.user.id);
   }
-
 
   if (!store.user.firstname || !store.user.firstname) {
     return (

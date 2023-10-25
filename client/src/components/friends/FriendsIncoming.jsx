@@ -18,10 +18,13 @@ function FriendsIncoming () {
                                 </div>
                                 <div className="friends-incoming-user-content">
                                     <Link style={{float: 'left'}} to={`/id${store.users[i].id}`} onClick={() => store.setUserProfile(store.users[i])}>{store.users[i].firstname} {store.users[i].lastname}</Link>
-                                    <div>
+                                    <div className='friends-incoming-user-nav'>
                                         <button id="friends-incoming-user-accept" onClick={() => {store.addFriend(store.user.id, requests.idUserFrom); store.removeRequests(requests.id, requests.idUserFrom)}}>Принять заявку</button>
                                         <button id="friends-incoming-user-cancel" onClick={() => store.removeRequests(requests.id, requests.idUserFrom)}>Отклонить заявку</button>
                                     </div>
+                                </div>
+                                <div className="friends-incoming-user-online">
+                                    {store.usersOnline.map(user => user === requests.idUserFrom && <p key={user}><span className='online' />Online</p>)}
                                 </div>
                             </div>
                             <div className="line"></div>

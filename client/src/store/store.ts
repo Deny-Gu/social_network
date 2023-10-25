@@ -24,6 +24,7 @@ configure({
 export default class Store {
     user = {} as IUser;
     users = [];
+    usersOnline = [];
     userProfile = {} as IUser;
     friends = {} as IFriends;
     records = {} as IRecords;
@@ -61,6 +62,10 @@ export default class Store {
 
     setUsers(users: any) {
         this.users = users;
+    }
+
+    setUsersOnline(users: any) {
+        this.usersOnline = users;
     }
 
     setUserProfile(user: IUser) {

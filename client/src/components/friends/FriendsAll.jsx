@@ -21,6 +21,9 @@ function FriendsAll () {
                                     <Link style={{float: 'left'}} to={`/id${friend.id}`} onClick={() => store.setUserProfile(friend)}>{friend.firstname} {friend.lastname}</Link>
                                     <button id="friends-incoming-user-accept">Написать сообщение</button>
                                 </div>
+                                <div className="friends-incoming-user-online">
+                                    {store.usersOnline.map(user => user === friend.id && <p key={user}><span className='online' />Online</p>)}
+                                </div>
                             </div>
                             <div className="line"></div>
                         </div>

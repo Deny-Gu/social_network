@@ -301,6 +301,22 @@ header {
     background-color: #b3c6df;
 }
 
+#profile_message-friend_btn {
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    background-color: #5181b8;
+}
+
+#profile_message-friend_btn:hover {
+    background-color: #83a8d3;
+}
+
 main {
     height: 90vh;
     display: flex;
@@ -1711,6 +1727,7 @@ input[type="file"]{
     width: 32%;
     border: 1px solid #ededed;
     border-radius: 5px;
+    position: relative;
 }
 
 .friends-page-user-photo img {
@@ -1760,9 +1777,18 @@ input[type="file"]{
     border-radius: 50%;
 }
 
+.friends-incoming-user-avatar {
+    width: 20%;
+}
+
 .friends-incoming-user-content {
     display: flex;
     flex-direction: column;
+    width: 60%;
+}
+
+.friends-incoming-user-content button {
+    width: 45%;
 }
 
 .friends-incoming-user-content a {
@@ -1780,9 +1806,46 @@ input[type="file"]{
     color: #2a5885;
 }
 
+.friends-incoming-user-nav {
+    text-align: left;
+}
+
+.friends-incoming-user-online {
+    width: 20%;
+    text-align: right;
+    position: relative;
+}
+
+.friends-search-user-online {
+    width: 48%;
+    text-align: right;
+}
+
+.friends-search-user-online span {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #00d853;
+    border: 2px solid white;
+}
+
+.online {
+    position: absolute;
+    top: 2px;
+    right: 43px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #00d853;
+    border: 2px solid white;
+}
+
 #friends-incoming-user-accept {
     cursor: pointer;
-    padding: 7px 10px;
+    padding: 7px 5px;
     margin-top: 15px;
     margin-left: 15px;
     border: none;

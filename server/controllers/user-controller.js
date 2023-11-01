@@ -7,6 +7,8 @@ const RequestsService = require('../service/requests-service');
 const FriendsService = require('../service/friends-service')
 const fs = require('fs');
 const path = require("path");
+const ChatsService = require('../service/chats-service');
+const MessagesService = require('../service/messages-service');
 
 class UserController {
     async registration (req, res, next) {
@@ -348,6 +350,36 @@ class UserController {
             const { id } = req.body;
             const friend = await FriendsService.removeFriend(id);
             return res.json(friend)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getChats (req, res, next) {
+        try {
+            const {idUser} = req.body;
+            const chats = await ChatsService.getChats(idUser);
+            return res.json(chats)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getMessages (req, res, next) {
+        try {
+            const {room} = req.body;
+            const messages = await MessagesService.getMessages(room);
+            return res.json(messages)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async addMessages (req, res, next) {
+        try {
+            const { room, idUser, message } = req.body;
+            const messages = await MessagesService.addMessages(room, idUser, message);
+            return res.json(messages)
         } catch (e) {
             next(e)
         }

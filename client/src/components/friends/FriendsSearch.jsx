@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { observer } from 'mobx-react-lite';
 import { Context } from "../..";
 import { AiOutlineSearch } from 'react-icons/ai';
-import { BsPersonAdd } from 'react-icons/bs';
 import { GrUserAdd } from 'react-icons/gr';
 import { GrUserExpert } from 'react-icons/gr';
 import { AiOutlineFieldTime } from 'react-icons/ai';
@@ -46,6 +45,7 @@ function FriendsSearch () {
                             </div>
                         )
                     }
+                    return null
                 })}
             </div> 
         </div>

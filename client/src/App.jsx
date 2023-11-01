@@ -5,6 +5,7 @@ import './css/index.css'
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import SideBar from './components/SideBar';
 import ProfileEdit from './components/profile/ProfileEdit';
+import { io } from 'socket.io-client'
 
 const App = () => {
   const { store } = useContext(Context);
@@ -14,6 +15,16 @@ const App = () => {
     if (localStorage.getItem('token')) {
       store.checkAuth()
     }
+    const socket = io('http://localhost:5000', {
+      query: {
+        idUser: store.user.id
+      }
+    })
+    socket.emit('user:add', store.user.id)
+
+    socket.on('user_list:update', (users) => {
+      store.setUsersOnline(users);
+    })
   }, [store])
 
   if (store.isLoading) {
@@ -29,23 +40,23 @@ const App = () => {
     )
   }
 
-  if (store.user.id) {
-    store.getAlbums(store.user.id);
-    store.getPhoto(store.user.id);
-    store.getUsers();
-    store.getFriends(store.user.id);
-    store.getRequestsIncoming(store.user.id);
-    store.getRequestsOutgoing(store.user.id);
-  }
+  // if (store.user.id) {
+  //   store.getAlbums(store.user.id);
+  //   store.getPhoto(store.user.id);
+  //   store.getUsers();
+  //   store.getFriends(store.user.id);
+  //   store.getRequestsIncoming(store.user.id);
+  //   store.getRequestsOutgoing(store.user.id);
+  // }
 
-  if (!store.user.firstname || !store.user.firstname) {
-    return (
-      <div id="page_layout">
-          <ProfileEdit />
-      </div>
+  // if (!store.user.firstname || !store.user.firstname) {
+  //   return (
+  //     <div id="page_layout">
+  //         <ProfileEdit />
+  //     </div>
 
-    )
-  }
+  //   )
+  // }
 
   return (
           <div id="page_layout">
@@ -56,6 +67,6 @@ const App = () => {
           </div>
           )
 
-};;
+};
 
 export default observer(App);

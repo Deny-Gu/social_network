@@ -20,6 +20,7 @@ function PhotoAlbumPage () {
                 if (album.id === Number(location.pathname.match(/\d+/g))) {
                     return setAlbumView(album);
                 }
+                return null
             })
         }
     }, [store.albums, location.pathname])

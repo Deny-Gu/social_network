@@ -1,13 +1,13 @@
 let users = []
+let socketsId = []
 
 function userHandlers(io, socket) {
   const { idUser } = socket.handshake.query
-  // утилита для обновления списка пользователей
+
   const updateUserList = () => {
-    // сообщение получают только пользователи, находящиеся в комнате
     io.emit('user_list:update', users)
   }
-  // обрабатываем подключение нового пользователя
+
   socket.on('user:add', async (user) => {
     if (users.length === 0) {
       if (user !== null) {
@@ -18,16 +18,18 @@ function userHandlers(io, socket) {
         users.push(user)
       }
     }
-    // // обновляем список пользователей
+    socketsId.push(socket.id)
+
     updateUserList()
   })
 
-    // обрабатываем отключения пользователя
   socket.on('disconnect', () => {
-    // удаляем пользователя из массива
+    let newSockets = socketsId.filter(s => s !== socket.id && s)
+    socketsId = [...newSockets]
+
     let newArr = users.filter(user => user !== Number(idUser) && user)
     users = [...newArr]
-    // обновляем список пользователей
+
     updateUserList()
   })
 }

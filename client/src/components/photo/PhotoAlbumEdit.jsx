@@ -30,6 +30,7 @@ function PhotoAlbumEdit () {
                     setEditTitle(album.albumTitle);
                     return setAlbumEdit(album);
                 }
+                return null
             })
             store.setEditAlbum(albumEdit);
         }
@@ -71,7 +72,7 @@ function PhotoAlbumEdit () {
     }
 
     async function editTitleAlbum (id, newTitle) {
-        const promise = await store.editTitleAlbum(id, store.user.email, oldTitle, newTitle, store.user.id)
+        await store.editTitleAlbum(id, store.user.email, oldTitle, newTitle, store.user.id)
 
         let newObj = {};
         Object.assign(newObj, store.editAlbum);

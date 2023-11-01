@@ -107,6 +107,7 @@ function ProfileRecordsList() {
             )
           }
         }
+        return null
       }) : <></>
 
       }

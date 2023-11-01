@@ -16,6 +16,9 @@ import { IRequests } from "../models/IRequests";
 import RequestsService from "../services/RequestsService";
 import { IFriends } from "../models/IFriends";
 import FriendsService from './../services/FriendsService';
+import { IChats } from "../models/IChats";
+import ChatsService from "../services/ChatsService";
+import MessagesService from "../services/MessagesService";
 
 configure({
     enforceActions: "never",
@@ -27,11 +30,14 @@ export default class Store {
     usersOnline = [];
     userProfile = {} as IUser;
     friends = {} as IFriends;
+    requestsIncoming = {} as IRequests;
+    requestsOutgoing = {} as IRequests;
     records = {} as IRecords;
     albums = {} as IAlbums;
     photo = {} as IPhoto;
-    requestsIncoming = {} as IRequests;
-    requestsOutgoing = {} as IRequests;
+    chats = [];
+    chatsMessages = {};
+    chatRoom = [];
     editAlbum = [];
     viewAlbum = [];
     isAuth = false;
@@ -43,6 +49,7 @@ export default class Store {
     isLoadingPhoto = false;
     isLoadingRequestsIncoming = false;
     isLoadingRequestsOutgoing = false;
+    isLoadingChats = false;
     location = '';
     error = '';
     API_URL_UPLOADS = 'http://localhost:5000/uploads/'
@@ -146,6 +153,22 @@ export default class Store {
 
     setLoadingFriends(bool: boolean) {
         this.isLoadingFriends = bool;
+    }
+
+    setChats(chats: any) {
+        this.chats = chats;
+    }
+
+    setChatsMessages(chats: any) {
+        this.chatsMessages = chats;
+    }
+
+    setLoadingChats(bool: boolean) {
+        this.isLoadingChats = bool;
+    }
+
+    setChatRoom(chat: any) {
+        this.chatRoom = chat;
     }
 
     async login(email: string, password: string) {
@@ -338,6 +361,7 @@ export default class Store {
         try {
             const response = await AlbumsService.getPhoto(idUser);
             this.setPhoto(response.data)
+            return response.data
         } catch (e: any) {
             this.setError(e.response?.data?.message)
         } finally {
@@ -440,6 +464,26 @@ export default class Store {
         try {
             const response = await FriendsService.removeFriend(id);
             this.getFriends(idUser)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        }
+    }
+
+    async getChats(idUser: string) {
+        this.setLoadingChats(true)
+        try {
+            const chats = await ChatsService.getChats(idUser);
+            this.setChats(chats.data)
+        } catch (e: any) {
+            this.setError(e.response?.data?.message)
+        } finally {
+            this.setLoadingChats(false)
+        }
+    }
+
+    async addMessages(room: string, idUser: string, message: string) {
+        try {
+            const response = await MessagesService.addMessages(room, idUser, message);
         } catch (e: any) {
             this.setError(e.response?.data?.message)
         }

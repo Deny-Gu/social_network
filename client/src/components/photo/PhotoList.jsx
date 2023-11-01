@@ -13,16 +13,18 @@ function PhotoList () {
 
     useEffect(() => {
         store.getPhoto(store.user.id)
+
+        function allPhotoArr () {
+            let arr = [];
+            store.photo.map(photo => {
+                return arr.push(`/${photo.albumTitle}/${photo.photo}`)
+            })
+            setAllPhoto(arr)
+        }
+
         allPhotoArr()
       }, [store])
 
-    function allPhotoArr () {
-        let arr = [];
-        store.photo.map(photo => {
-            arr.push(`/${photo.albumTitle}/${photo.photo}`)
-        })
-        setAllPhoto(arr)
-    }
 
     function ModalViewPhoto () {
         document.body.style.overflow = 'hidden';

@@ -1,13 +1,14 @@
 const userHandlers = require('./handlers/user.handler')
+const messagesHandlers = require('./handlers/messages.handler')
 
 function onConnection(io, socket) {
   // извлекаем идентификатор комнаты и имя пользователя
-  const { idUser } = socket.handshake.query
+  const { idUser, roomId } = socket.handshake.query
 
-  // записываем их в объект сокета
+  socket.roomId = roomId
   socket.idUser = idUser
 
-  // регистрируем обработчики для пользователей
+  messagesHandlers(io, socket)
   userHandlers(io, socket)
 }
 

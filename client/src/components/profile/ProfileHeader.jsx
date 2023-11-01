@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useContext, useState } from "react";
 import { Context } from "../..";
 import { observer } from 'mobx-react-lite';
 import { HiOutlineGift } from 'react-icons/hi2';
@@ -15,7 +14,6 @@ import ButtonProfile from "./ButtonProfile";
 
 function ProfileHeader() {
   const { store } = useContext(Context);
-  const navigate = useNavigate();
   const [isNavAvatar, setIsNavAvatar] = useState(false);
   const [viewAvatar, setViewAvatar] = useState(false);
   const [refreshAvatar, setRefreshAvatar] = useState(false);

@@ -29,6 +29,7 @@ function FriendsOutgoing () {
                     )
                 }
             }
+            return null
         }) 
     } else {
         return (

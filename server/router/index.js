@@ -36,6 +36,9 @@ router.post('/remove-requests', UserController.removeRequests)
 router.post('/get-friends', UserController.getFriends)
 router.post('/add-friend', UserController.addFriend)
 router.post('/remove-friend', UserController.removeFriend)
+router.post('/get-chats', UserController.getChats)
+router.post('/get-messages', UserController.getMessages)
+router.post('/add-messages', UserController.addMessages)
 
 
 

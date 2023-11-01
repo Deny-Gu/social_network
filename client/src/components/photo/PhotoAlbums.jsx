@@ -21,7 +21,7 @@ function PhotoAlbums () {
             setAlbum(store.albums[0].albumTitle);
             setAlbumId(store.albums[0].id);
         }
-      }, [])
+      }, [store.albums])
 
     function searchAlbumId (albumTitle) {
         setAlbum(albumTitle);

@@ -8,7 +8,7 @@ function FriendsOnline () {
 
     return (
         <div className='friends-all'>
-            {store.usersOnline.length > 0 ? 
+            {store.usersOnline.length > 1 ? 
                 <div>
                     {store.friends.map(friend => {
                         return store.usersOnline.map(userOnline => {
@@ -31,6 +31,7 @@ function FriendsOnline () {
                                 </div>
                                 )
                             }
+                            return null
                         })
                     })}
                 </div> :

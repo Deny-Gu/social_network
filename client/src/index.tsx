@@ -15,6 +15,8 @@ import PhotoAlbumPage from './components/photo/PhotoAlbumPage';
 import FriendsPage from './components/friends/FriendsPage';
 import FriendsSearchPage from './components/friends/FriendsSearchPage';
 import FriendsRequestsPage from './components/friends/FriendsRequestsPage';
+import MessagesPage from './components/messages/MessagesPage';
+import MessagesRoomPage from './components/messages/MessagesRoomPage';
 
 interface State {
   store: Store
@@ -54,6 +56,14 @@ let router = createBrowserRouter([
       {
         path: "/friends-search",
         element: <FriendsSearchPage />
+      },
+      {
+        path: "/messages",
+        element: <MessagesPage />
+      },
+      {
+        path: "/messages-room/:id",
+        element: <MessagesRoomPage />
       },
       {
         path: "/photo",

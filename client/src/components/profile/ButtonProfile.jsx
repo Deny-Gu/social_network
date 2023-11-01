@@ -15,6 +15,7 @@ function ButtonProfile () {
                   if (req.idUserTo === store.userProfile.id) {
                     res('requests')
                   }
+                  return null
                 })
             }
             if (store.friends.length) {
@@ -22,6 +23,7 @@ function ButtonProfile () {
                   if (friend.id === store.userProfile.id) {
                     res('friend')
                   }
+                  return null
                 })
             }
             res('no-friend')

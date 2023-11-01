@@ -1,6 +1,4 @@
-import React, { useContext } from 'react';
 import { observer } from "mobx-react-lite";
-import { Context } from "../..";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import FriendsOutgoing from './FriendsOutgoing';
@@ -8,7 +6,6 @@ import FriendsIncoming from './FriendsIncoming';
 
 
 function FriendsRequests () {
-    const { store } = useContext(Context);
     const [requests, setRequests] = useState('incoming');
 
     return (

@@ -32,7 +32,7 @@ function SideBar() {
                             <span className="sidebar_icon">
                                 <BiMessageDetail />
                             </span>
-                            <Link to="/">Сообщения</Link>
+                            <Link to="/messages">Сообщения</Link>
                         </li>
                         <li>
                             <span className="sidebar_icon">

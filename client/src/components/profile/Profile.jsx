@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Context } from "../..";
 import { observer } from 'mobx-react-lite';
 import ProfileHeader from './ProfileHeader';
@@ -51,7 +51,7 @@ const Profile = function () {
 
     )
   }
-  
+
   return (
     <>
       <ProfileHeader />

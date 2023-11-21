@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom"
+import React, { useContext } from "react";
+import { Link } from "react-router-dom"
 import { Context } from "../..";
 import { observer } from 'mobx-react-lite';
 
@@ -20,7 +20,7 @@ function MessagesList () {
                                                 </div>
                                                 <div className="message-list-item-user-content">
                                                     <h3>{user.firstname} {user.lastname}</h3>
-                                                    <p>{store.chatsMessages[chat.room][store.chatsMessages[chat.room].length - 1].message}</p>
+                                                    {store.chatsMessages[chat.room][store.chatsMessages[chat.room].length - 1] !== undefined && <p>{store.chatsMessages[chat.room][store.chatsMessages[chat.room].length - 1].message}</p>}
                                                 </div>
                                                 <div className="message-list-item-user-online">
                                                     {store.usersOnline.map(userOnline => userOnline === user.id && <p key={userOnline}><span className='online-chat' /></p>)}
